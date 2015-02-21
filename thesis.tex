@@ -1,0 +1,169 @@
+%% Load document class fithesis2
+%% {10pt, 11pt, 12pt}
+%% {draft, final}
+%% {oneside, twoside}
+%% {onecolumn, twocolumn}
+\documentclass[12pt,final,oneside]{fithesis2}
+
+%% Basic packages
+\usepackage[english]{babel}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+%% Additional packages for colors, advanced
+%% formatting options, etc.
+\usepackage{color}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{cslatexquotes}
+\usepackage{fancyvrb}
+\usepackage[small,bf]{caption}
+\usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
+\usepackage[all]{hypcap}
+
+%% Fix long URLs in DVIs
+\usepackage{ifpdf}
+
+%% Source code highlight
+
+\usepackage{floatrow}
+\usepackage[chapter]{minted}
+\usemintedstyle{trac}
+%get caption above code
+\floatsetup[listing]{style=Plaintop}
+%caption style    
+\captionsetup[listing]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf}}
+%fancyvrb frame
+\renewcommand{\listingscaption}{Example}
+
+
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\ifpdf
+\else
+  \usepackage{breakurl}
+\fi
+
+%% Packages used to generate various lists
+\usepackage{makeidx}
+\makeindex
+
+\usepackage[xindy]{glossaries}
+\makeglossary
+
+%% Use STAR and CIRCLE signs for nested
+%% itemized lists
+\renewcommand{\labelitemii}{$\star$}
+\renewcommand{\labelitemiii}{$\circ$}
+
+%% Title page information
+\thesistitle{RESTEasy integration with Apache Camel project}
+\thesissubtitle{Master's thesis}
+\thesisstudent{Roman Jakubčo}
+\thesiswoman{false} %% Important when using Slovak or Czech lang
+\thesisfaculty{fi}  %% {fi, eco, law, sci, fsps, phil, ped, med, fss}
+\thesislang{en}     %% {en, sk, cs}
+\thesisyear{Spring 2015}
+\thesisadvisor{Mgr. Marek Grác, PhD.}
+
+%% Beginning of the document
+\begin{document}
+
+%% Front page with a logo and basic thesis information
+\FrontMatter
+\ThesisTitlePage
+
+%% Thesis declaration (required)
+\begin{ThesisDeclaration}
+  \DeclarationText
+  \AdvisorName
+\end{ThesisDeclaration}
+
+%% Thanks (optional)
+\begin{ThesisThanks}
+ 
+\end{ThesisThanks}
+
+%% Abstract (required)
+\begin{ThesisAbstract}
+
+\end{ThesisAbstract}
+
+%% Keywords (required)
+\begin{ThesisKeyWords}
+
+\end{ThesisKeyWords}
+
+%% Beginning of the thesis itself
+\MainMatter
+
+%% TOC (required)
+\tableofcontents
+
+%% Thesis text structured using
+%% chapters, sections, subsections, etc.
+\chapter{Introduction}
+
+
+
+
+
+%% Lists of tables and figures, glossary, etc.
+%%\printindex
+%%\printglossary
+%%\listoffigures
+%%\listoftables
+
+\begingroup
+\def\tmpchapter{0}
+\renewcommand{\chaptername}{}
+\renewcommand{\thechapter}{}
+%%\addtocontents{toc}{\setcounter{tocdepth}{-1}}
+\chapter{References}
+\renewcommand{\chapter}[2]{}% for other classes
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\begin{thebibliography}{}
+%\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
+%
+%\bibitem{undertow-web} JBOSS. \textit{JBoss Undertow} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://undertow.io/index.html}
+%
+%\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}
+%
+%\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
+%				
+%\bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 
+%19-351-8236-6.
+%
+%\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
+%
+%\bibitem{dzone} DZONE RESEARCH. \textit{Guide to Enterprise Integration} [online]. 2014- [cite 2014-12-14]. Available at: \url{http://www.dzone.com/research/guide-to-enterprise-integration}
+%
+%%\bibitem{esb} THOMAS, Anne. \texit{https://www.gartner.com/doc/1405237/enterprise-service-bus-definition} [online]. 2007 - [cite 2014-12-14]. Available at: \url{https://www.gartner.com/doc/1405237/enterprise-service-bus-definition}
+%
+%\bibitem{java-nio} ORACLE. \textit{Java NIO} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://docs.oracle.com/javase/7/docs/api/java/nio/package-summary.html}
+%
+%\bibitem{xnio-doc} JBOSS. \textit{XNIO Documentation Developer's Guide} [online]. 2014- [cite 2014-12-12]. Available at: \url{https://docs.jboss.org/author/display/XNIO/Developer%27s+Guide}
+%
+%\bibitem{undertow-doc} JBOSS. \textit{JBoss Undertow Documentation} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://undertow.io/documentation/}
+%
+%\bibitem{perf} TECH EMPOWER. \textit{Web Framework Benchmarks - Round 9}. 2014- [cite 2014-12-16]. Available at: \url{http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json&l=3k}
+%
+%\bibitem{http} NETWORK WORKING GROUP. \textit{Hypertext Transfer Protocol -- HTTP/1.1
+%} [online]. 1999- [cite 2014-12-03]. Available at : \url{https://www.ietf.org/rfc/rfc2616}
+\end{thebibliography}
+
+\endgroup
+%% Additional materials
+\appendix
+
+\chapter{Appendix}
+
+
+%% End of the whole document
+\end{document}

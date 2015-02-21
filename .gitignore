@@ -1,0 +1,4 @@
+*.log
+thesis.*
+!thesis.tex
+!thesis.pdf

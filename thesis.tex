@@ -109,30 +109,80 @@
 
 
 \chapter{Technologies}
+This chapter describes technologies that are used for implementation of Camel RESTEasy  component. Each subsection introduces the technology and tries to explain what is its main functionality and common usage.
+
 \section{Apache Camel}
-\subsection{Fundamentals}
-\subsection{Architecture}
-\section{Development of the Camel component}
-\section{Integration}
-\section{REST architecture}
-\section{JBoss RESTEasy}
-\subsection{RESTful webservice}
-\subsection{JAX-RS 1.0}
-\subsection{JAX-RS 2.0}
+Apache Camel is a open source rule-based routing and mediation framework implemented in Java. It is based on theory of Enterprise Integration Patterns or EIP, described in the book with same name written by Gregor Hohpe and Bobby Wolf\cite{eip}.
 
-\chapter{Analysis and Design}
-\section{Requirements}
-\subsection{Camel consumer}
-\subsection{Camel producer}
-\section{Diagrams}
-\subsection{Data flow diagram}
-\subsection{Class diagram}
-\section{Design restrictions}
+Its main focus is on integration and interaction between various applications or systems for which Camel can provide standalone routing, transformation, monitoring and many other things. From this point of view Camel may seems like ESB\footnote{ESB - Enterprise Service Bus}, but this is not the case, because Camel doesn't provide a container support or reliable message bus, but it can be deployed into one and create full integration platforms(also know as ESB) like Apache ServiceMix\footnote{\url{http://servicemix.apache.org/}}, JBoss Fuse\footnote{\url{http://www.jboss.org/products/fuse/overview/}} and JBoss Fuse Service Works. 
 
-\chapter{Implementation}
-\section{•}
+Camel also has extensible and modular architecture that allows implementation and seamlessly plug in support for new protocols and this architectural design makes Camel lightweight, fast and easy extendable for developers.\cite{camel-in-action}
 
-\chapter{Conclusion}
+\subsection{The core principles/features of Camel}
+Camel is using convention over configuration approach to describe given task by domain-specific language (DSL) in declarative way. This way Camel minimize number of lines of the source code that is needed for implementation of integration scenarios. Another key feature that helps with this task is usage of theory of EIPs, which are already integrated in DSL and also getting the most from their potential. 
+
+Another fundamental principle of Camel is that it makes no assumptions about the data format. This feature is important because it makes possible for developer to integrate  systems together without need to convert data to some canonical format. This way there are no limitations for integration of any kind of systems together\cite{camel-in-action}.
+
+\subsection*{Routing and mediation engine}
+One of the core features of Camel is its routing and mediation engine. A routing engine selectively move a message from one destination to another based on the route’s configuration. Users also can define their own rules for routing, add processors to modify the content of messages, filter them based on some predicate and at the end decide the final destination for the delivery of the message.
+
+\subsection*{Enterprise integration patterns}
+Like it is mentioned before Camel is based primarily on EIPs. EIPs describe integration problems and their solutions and also provide some basic vocabulary but the problem is that this vocabulary isn't formalized. And in this comes Camel with its language which describes the integration solutions and tries to formalized the vocabulary. There’s almost a one-to-one relationship between the patterns described in
+Enterprise Integration Patterns and the Camel DSL\footnote{\url{http://camel.apache.org/enterprise-integration-patterns.html}}.
+Almost all of the EIPs that are definied in the book are implemented as Processors or sets of Processors in the Camel. Processors are used for manipulation of messages between destinations specified in the Camel route.\cite{camel-dzone}
+
+
+
+\subsection*{Domain-specific language}
+There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there also possibility to describe the route in XML document. 
+
+%\begin{listing}[ht]
+%	\inputminted[]{java}{sources/java_dsl_example.java}
+%	\caption{Java DSL definition of route}
+%
+%\end{listing}
+%
+%\begin{listing}[ht]
+%	\inputminted[]{xml}{sources/xml_example.xml}
+%	\caption{XML definition of route }
+%
+%\end{listing}
+%
+%\begin{listing}[ht]
+%	\inputminted[]{java}{sources/scala_example.java}
+%	\caption{Scala definition of route }
+%
+%\end{listing}
+
+\subsection*{Modular and pluggable architecture}
+\subsection*{Configuration}
+\subsection*{Type converters}
+\subsection*{Lightweight framework}
+
+
+
+%\subsection{Architecture}
+%\section{Development of the Camel component}
+%\section{Integration}
+%\section{REST architecture}
+%\section{JBoss RESTEasy}
+%\subsection{RESTful webservice}
+%\subsection{JAX-RS 1.0}
+%\subsection{JAX-RS 2.0}
+%
+%\chapter{Analysis and Design}
+%\section{Requirements}
+%\subsection{Camel consumer}
+%\subsection{Camel producer}
+%\section{Diagrams}
+%\subsection{Data flow diagram}
+%\subsection{Class diagram}
+%\section{Design restrictions}
+%
+%\chapter{Implementation}
+%\section{•}
+%
+%\chapter{Conclusion}
 
 
 
@@ -157,6 +207,10 @@
 \bibliography{references}
 
 \begin{thebibliography}{}
+\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
+\bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 19-351-8236-6.
+\bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
+
 %\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
 %
 %\bibitem{undertow-web} JBOSS. \textit{JBoss Undertow} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://undertow.io/index.html}
@@ -165,8 +219,7 @@
 %
 %\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
 %				
-%\bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 
-%19-351-8236-6.
+
 %
 %\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
 %

@@ -134,7 +134,7 @@ Almost all of the EIPs that are definied in the book are implemented as Processo
 
 
 \subsection*{Domain-specific language}
-There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there also possibility to describe the route in XML document. 
+There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there is also possibility to describe the route in XML document. 
 
 %\begin{listing}[ht]
 %	\inputminted[]{java}{sources/java_dsl_example.java}
@@ -155,7 +155,19 @@ There are few other integration frameworks with DSL and also some have support f
 %\end{listing}
 
 \subsection*{Modular and pluggable architecture}
+The next feature is the approach to the architecture, which is done in modular way. This means, that Camel can be easily extended to consume data from endpoint and produce data to endpoint. Camel is describing this as developing a new component, where each component is responsible for consuming or producing data for some specific endpoint and technology e.g. file, HTTP and many others. When developers want to develop a new component for some unique system and add its functionality to the Camel, they just need to follow structure specified by the framework and extend core classes. 
+
+By default Camel ships with the few most basic components called camel-core. This bundle includes 24 components including components like bean, file, log, seda and mock. Plus there are many more components developed by the Apache community and also third-parties\footnote{\url{http://camel.apache.org/components.html}}. There are already developed components that can be used for the most common integration scenarios that occur in systems. Some components worthy of note are web services including SOAP\footnote{SOAP} or REST\footnote{REST}, JMS\footnote{JMS}, specialized JMS component for Apache ActiveMQ\footnote{\url{http://camel.apache.org/activemq.html}} or components for different database connections.
+
+
 \subsection*{Configuration}
+As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things.  This is reflected on configuration of endpoints in route definitions with URI options as can be seen on example \ref{}.
+%\begin{listing}[ht]
+%	\inputminted[]{java}{sources/converter.java}
+%	\caption{TypeConverter invocation}
+%	\labe{converter}
+%\end{listing}
+
 \subsection*{Type converters}
 \subsection*{Lightweight framework}
 

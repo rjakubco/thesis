@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n+nt}{\PYGtracZlt{}route\PYGtracZgt{}}
+   \PYGtrac{n+nt}{\PYGtracZlt{}from} \PYGtrac{n+na}{uri=}\PYGtrac{l+s}{\PYGtracZsq{}undertow://localhost:8888/myapp\PYGtracZsq{}}\PYGtrac{n+nt}{/\PYGtracZgt{}}
+   \PYGtrac{n+nt}{\PYGtracZlt{}to} \PYGtrac{n+na}{uri=}\PYGtrac{l+s}{\PYGtracZsq{}file:log/access.log\PYGtracZsq{}}\PYGtrac{n+nt}{/\PYGtracZgt{}}
+\PYGtrac{n+nt}{\PYGtracZlt{}/route\PYGtracZgt{}}
+\end{Verbatim}

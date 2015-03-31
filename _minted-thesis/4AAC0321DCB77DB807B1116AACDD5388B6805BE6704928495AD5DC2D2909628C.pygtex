@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n}{from}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}undertow://localhost:8888/myapp\PYGtracZdq{}}\PYGtrac{o}{)}
+    \PYGtrac{o}{.}\PYGtrac{n+na}{to}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}file:log/access.log\PYGtracZdq{}}\PYGtrac{o}{);}
+\end{Verbatim}

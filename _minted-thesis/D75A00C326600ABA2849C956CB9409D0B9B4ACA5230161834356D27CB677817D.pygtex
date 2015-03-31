@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{c+c1}{//pattern to follow}
+\PYGtrac{l+s}{\PYGtracZdq{}undertow://\PYGtracZob{}host\PYGtracZcb{}:\PYGtracZob{}port\PYGtracZcb{}/\PYGtracZob{}path\PYGtracZcb{}?[\PYGtracZob{}uriOptions\PYGtracZcb{}]\PYGtracZdq{}}
+
+\PYGtrac{l+s}{\PYGtracZdq{}undertow://localhost:8080/foo?matchOnUriPrefix=true\PYGtracZdq{}}
+\end{Verbatim}

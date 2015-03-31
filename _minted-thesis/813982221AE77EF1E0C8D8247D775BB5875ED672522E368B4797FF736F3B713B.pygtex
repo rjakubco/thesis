@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{c+c1}{//direct use of TypeConverter}
+\PYGtrac{n}{TypeConverter} \PYGtrac{n}{tc} \PYGtrac{o}{=} \PYGtrac{n}{consumer}\PYGtrac{o}{.}\PYGtrac{n+na}{getEndpoint}\PYGtrac{o}{()}
+            \PYGtrac{o}{.}\PYGtrac{n+na}{getCamelContext}\PYGtrac{o}{().}\PYGtrac{n+na}{getTypeConverter}\PYGtrac{o}{();}
+\PYGtrac{n}{ByteBuffer} \PYGtrac{n}{bodyAsByteBuffer} \PYGtrac{o}{=} 
+            \PYGtrac{n}{tc}\PYGtrac{o}{.}\PYGtrac{n+na}{convertTo}\PYGtrac{o}{(}\PYGtrac{n}{ByteBuffer}\PYGtrac{o}{.}\PYGtrac{n+na}{class}\PYGtrac{o}{,} \PYGtrac{n}{body}\PYGtrac{o}{);}
+
+\PYGtrac{c+c1}{//automatic trigger under the hood}
+\PYGtrac{n}{ByteBuffer} \PYGtrac{n}{bodyAsBuffer} \PYGtrac{o}{=} 
+            \PYGtrac{n}{message}\PYGtrac{o}{.}\PYGtrac{n+na}{getBody}\PYGtrac{o}{(}\PYGtrac{n}{ByteBuffer}\PYGtrac{o}{.}\PYGtrac{n+na}{class}\PYGtrac{o}{);}
+\end{Verbatim}

@@ -13,6 +13,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 
+
 %% Additional packages for colors, advanced
 %% formatting options, etc.
 \usepackage{color}
@@ -35,7 +36,8 @@
 %get caption above code
 \floatsetup[listing]{style=Plaintop}
 %caption style    
-\captionsetup[listing]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf}}
+%\captionsetup[listing]{format=listing, singlelinecheck=false, margin=pt, font={bf}}
+%\captionsetup[listing]{format=listing}
 %fancyvrb frame
 \renewcommand{\listingscaption}{Example}
 
@@ -121,38 +123,39 @@ Camel also has extensible and modular architecture that allows implementation an
 \subsection{The core principles/features of Camel}
 Camel is using convention over configuration approach to describe given task by domain-specific language (DSL) in declarative way. This way Camel minimize number of lines of the source code that is needed for implementation of integration scenarios. Another key feature that helps with this task is usage of theory of EIPs, which are already integrated in DSL and also getting the most from their potential. 
 
-Another fundamental principle of Camel is that it makes no assumptions about the data format. This feature is important because it makes possible for developer to integrate  systems together without need to convert data to some canonical format. This way there are no limitations for integration of any kind of systems together\cite{camel-in-action}.
+Another fundamental principle of Camel is that it makes no assumptions about the data format. This feature is important because it makes possible for developers to integrate  systems together without any need to convert data to some canonical format. This way there are no limitations for integration of any kind of systems together\cite{camel-in-action}.
 
 \subsection*{Routing and mediation engine}
-One of the core features of Camel is its routing and mediation engine. A routing engine selectively move a message from one destination to another based on the route’s configuration. Users also can define their own rules for routing, add processors to modify the content of messages, filter them based on some predicate and at the end decide the final destination for the delivery of the message.
+One of the core features of Camel is its routing and mediation engine. A routing engine selectively moves a data from one destination to another based on the route’s configuration. Users also can define their own rules for routing, add processors to modify the data, filter them based on some predicate and at the end decide the final destination for the delivery.
 
 \subsection*{Enterprise integration patterns}
-Like it is mentioned before Camel is based primarily on EIPs. EIPs describe integration problems and their solutions and also provide some basic vocabulary but the problem is that this vocabulary isn't formalized. And in this comes Camel with its language which describes the integration solutions and tries to formalized the vocabulary. There’s almost a one-to-one relationship between the patterns described in
+Like it is mentioned before Camel is based primarily on EIPs. EIPs describe integration problems and their solutions and also provide some basic vocabulary but the problem is this vocabulary isn't formalized. And into this comes Camel with its language which describes the integration solutions and tries to formalized the vocabulary. There's almost a one-to-one relationship between the patterns described in
 Enterprise Integration Patterns and the Camel DSL\footnote{\url{http://camel.apache.org/enterprise-integration-patterns.html}}.
-Almost all of the EIPs that are definied in the book are implemented as Processors or sets of Processors in the Camel. Processors are used for manipulation of messages between destinations specified in the Camel route.\cite{camel-dzone}
+Almost all of the EIPs that are defined in the book are implemented as Processors or sets of Processors in the Camel. Processors are used for manipulation of messages between destinations specified in the Camel route.\cite{camel-dzone}
 
 
 
 \subsection*{Domain-specific language}
-There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there is also possibility to describe the route in XML document. 
+There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is its the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there is also possibility to describe the route in XML document. 
 
-%\begin{listing}[ht]
-%	\inputminted[]{java}{sources/java_dsl_example.java}
-%	\caption{Java DSL definition of route}
-%
-%\end{listing}
-%
-%\begin{listing}[ht]
-%	\inputminted[]{xml}{sources/xml_example.xml}
-%	\caption{XML definition of route }
-%
-%\end{listing}
-%
-%\begin{listing}[ht]
-%	\inputminted[]{java}{sources/scala_example.java}
-%	\caption{Scala definition of route }
-%
-%\end{listing}
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/java_dsl_example.java}
+	\caption{Java DSL definition of route}
+
+\end{listing}
+
+\begin{listing}[ht]
+	\inputminted[]{xml}{sources/xml_example.xml}
+	\caption{XML definition of route }
+
+\end{listing}
+
+\begin{listing}[ht, p!]
+	\inputminted[]{java}{sources/scala_example.java}
+	\caption{Scala definition of route }
+
+\end{listing}
+
 
 \subsection*{Modular and pluggable architecture}
 The next feature is the approach to the architecture, which is done in modular way. This means, that Camel can be easily extended to consume data from endpoint and produce data to endpoint. Camel is describing this as developing a new component, where each component is responsible for consuming or producing data for some specific endpoint and technology e.g. file, HTTP and many others. When developers want to develop a new component for some unique system and add its functionality to the Camel, they just need to follow structure specified by the framework and extend core classes. 
@@ -161,20 +164,77 @@ By default Camel ships with the few most basic components called camel-core. Thi
 
 
 \subsection*{Configuration}
-As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things.  This is reflected on configuration of endpoints in route definitions with URI options as can be seen on example \ref{}.
-%\begin{listing}[ht]
-%	\inputminted[]{java}{sources/converter.java}
-%	\caption{TypeConverter invocation}
-%	\labe{converter}
-%\end{listing}
+As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things.  This is reflected on configuration of endpoints in route definitions with URI options as can be seen on example \ref{uri-option}.
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/uri.java}
+	\caption{URI options configurations}
+	\label{uri-option}
+\end{listing}
 
 \subsection*{Type converters}
+Another feature of Camel which is one of the top features for Camel Community and that are build-in automatic converters. Out of the box Camel ships with more than hundred and fifty converters\cite{camel-in-action}. Plus if there is no converter for your types, there is possibility to create new custom converters for your specific types. Usage of the converter can be seen on example \ref{converter} and the example also demonstrates how is the converter used by Camel without user's knowledge in \textit{getBody} method and its parameter.
+
+\begin{listing}[ht, p!]
+	\inputminted[]{java}{sources/converter.java}
+	\caption{TypeConverter invocation}
+	\label{converter}
+\end{listing}
+
+
 \subsection*{Lightweight framework}
+From the start the whole framework was designed to be undemanding and lightweight as possible. The core library has only about 1.6 MB and third parties dependencies are kept at minimum. This way Camel can be easily embedded into any platform, which can be e.g. OSGi bundle, Spring application, Java EE application or web application. 
+
+\subsection{Message model}
+Until now we talk about sending data from one endpoint to another. That is exactly what is Camel doing but in reality it is sending and receiving messages which encapsulate the data. There two abstractions classes that are use for modelling messages in Camel and these are:
+\begin{itemize}
+\item
+\texttt{org.apache.camel.Message} -- the basic entity containing data that is routed in the Camel 
+
+\item
+\texttt{org.apache.camel.Exchange} -- special abstraction used in Camel for exchange of messages, that has \textit{in} message and \textit{out} message as a reply
+
+\end{itemize} 
+
+\subsection*{Message}
+Message object is representing data that is used by systems to communicate with each other. Messages are sent in one direction from a sender to a receiver. The message object consists of body, headers and optional attachments. All messages must be uniquely identified with an unique identifier(UID). The format of UID is not guaranteed and it is dependent on the used protocol. If the protocol doesn't have UID scheme, then generic generator from the framework is used.
+
+Headers are name-value pairs associated with the message, similar to HTTP protocol. They provide additional information about the message such as sender identifiers, encoding, content type or authentication parameters. They are stored in a map within the message and each name of the header is unique case insensitive string and the value can be any Java object.
+
+Body is representing content of the message and its type is generic Java Object, so message can store any kind or type of content. The sender should send body type acceptable by the receiver. If this is not the case then manual transformation inside the route is needed or more conveniently type converters are automatically used by the Camel.
 
 
+\subsection*{Exchange}
+An \textit{Exchange} is defined as message's container encapsulating the \textit{Message} used during routing. There are various types of interactions between systems and they are supported by the \textit{Exchange}. These interactions are called message exchange patterns (MEPs) and they are used to specify messaging styles in the property of the  \textit{Exchange}. This property has to two different messaging styles where one is one-way and the other one is request-response. 
 
-%\subsection{Architecture}
-%\section{Development of the Camel component}
+The request-response or \textit{InOut} called in the Camel, is probably the more well-known style because it is used in HTTP-based transport, where client requests to retrieve a web page and it is waiting for the reply from the server. One-way is defined as \textit{InOnly} and for example is primarily use in JMS, where message is sent to the queue and sender doesn't need any response from the queue. These two types are just the basic ones, but Camel provides few more special cases\footnote{Exchange patterns in Camel\url{
+http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/ExchangePattern.html}}.\cite{camel-exchange}
+
+The \textit{Exchange} is little bit more complex than the \textit{Message} and it is consisting from\cite{camel-in-action}:
+\begin{itemize}
+\item
+Exchange ID -- is unique ID that identifies the exchange and it is also automatically generated by the Camel if ID is not explicitly set.
+
+\item
+MEP -- defines type of messaging style.
+
+\item
+Exception -- If an error occurred during routing, then \textit{Exception} is set into this field.
+
+\item
+Properties -- various properties of the \textit{Exchange} used by Camel, similar to headers in \textit{Message}, but with difference that the properties last for the duration of entire exchange and contain global information, whereas message header are specific to the \textit{Message}. They can be also edited by developers.
+
+\item
+In message -- mandatory input message containing request message.
+
+\item
+Out message -- optional message containing reply message if the MEP is set to \textit{InOut}.
+\end{itemize}
+
+
+\subsection{Camel's architecture}
+
+\section{Development of the new Camel component}
+\subsection{Camel context}
 %\section{Integration}
 %\section{REST architecture}
 %\section{JBoss RESTEasy}
@@ -192,7 +252,7 @@ As mentioned before Camel uses convention over configuration paradigm to minimiz
 %\section{Design restrictions}
 %
 %\chapter{Implementation}
-%\section{•}
+%\section{ssss}
 %
 %\chapter{Conclusion}
 
@@ -222,33 +282,22 @@ As mentioned before Camel uses convention over configuration paradigm to minimiz
 \bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
 \bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 19-351-8236-6.
 \bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
+\bibitem{camel-exchange} http://camel.apache.org/exchange-pattern.html
 
-%\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
-%
-%\bibitem{undertow-web} JBOSS. \textit{JBoss Undertow} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://undertow.io/index.html}
-%
-%\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}
-%
-%\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
-%				
+\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
+
+\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}			
 
 %
-%\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
+\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
 %
 %\bibitem{dzone} DZONE RESEARCH. \textit{Guide to Enterprise Integration} [online]. 2014- [cite 2014-12-14]. Available at: \url{http://www.dzone.com/research/guide-to-enterprise-integration}
 %
 %%\bibitem{esb} THOMAS, Anne. \texit{https://www.gartner.com/doc/1405237/enterprise-service-bus-definition} [online]. 2007 - [cite 2014-12-14]. Available at: \url{https://www.gartner.com/doc/1405237/enterprise-service-bus-definition}
-%
-%\bibitem{java-nio} ORACLE. \textit{Java NIO} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://docs.oracle.com/javase/7/docs/api/java/nio/package-summary.html}
-%
-%\bibitem{xnio-doc} JBOSS. \textit{XNIO Documentation Developer's Guide} [online]. 2014- [cite 2014-12-12]. Available at: \url{https://docs.jboss.org/author/display/XNIO/Developer%27s+Guide}
-%
-%\bibitem{undertow-doc} JBOSS. \textit{JBoss Undertow Documentation} [online]. 2014- [cite 2014-12-12]. Available at: \url{http://undertow.io/documentation/}
-%
-%\bibitem{perf} TECH EMPOWER. \textit{Web Framework Benchmarks - Round 9}. 2014- [cite 2014-12-16]. Available at: \url{http://www.techempower.com/benchmarks/#section=data-r9&hw=peak&test=json&l=3k}
-%
-%\bibitem{http} NETWORK WORKING GROUP. \textit{Hypertext Transfer Protocol -- HTTP/1.1
-%} [online]. 1999- [cite 2014-12-03]. Available at : \url{https://www.ietf.org/rfc/rfc2616}
+
+
+
+
 \end{thebibliography}
 
 \endgroup

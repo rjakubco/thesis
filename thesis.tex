@@ -268,9 +268,21 @@ Registry -- registry is used for the look up of beans. JNDI\footnote{JNDI} regis
 \end{itemize}
 
 \subsection*{Routing engine and routes}
+The routing engine is the thing that actually moves messages, but is not visible to users. It guarantees correct routing from the sender to the receiver.
 
+Routing engine is using routes for its routing. Routes are the essence of the Camel and are the main and only approach how to specify what should be moved where for the routing engine. This means that the route must hold definition of input source to output target. There many possibilities for definition of the route, but the simplest way is to define route as a chain of processors\cite{camel-in-action}. Similar to Message or Exchange, each route has unique identifier that is used for different operation inside of Camel like monitoring, starting or stopping the route. One of the constraint for the route is restriction for the number of input sources, where each route must have exactly one input source that is tied to input endpoint and there can be one or several output targets.
 
-\section{Development of the new Camel component}
+\subsection*{Processors}
+As mentioned before the simplest route consists from the chain of processors. The processor represents a node responsible for using, creating or modifying content of incoming \textit{Exchange} and also its headers. In the chain of processors, exchanges moves during routing from one processor to a another, in the their order defined in the route. This way a route can be seen as graph with nodes where output from the one node is input of another.
+
+As stated previously, almost all built-in processors or their combinations are implementation of EIPs, but Camel also supports implementation of own custom processors and their easy addition to the route.
+
+\subsection*{Component}
+A components help with modular approach and they are main extension point in Camel. Their main purpose and task is to be a factory of endpoints. As mentioned before developers can create their new components, more information and detail on this topic will be given in subchapter \ref{component-devel}. 
+
+\subsection*{Endpoint}
+ 
+\section{Development of the new Camel component}\label{component-devel}
 
 %\section{Integration}
 %\section{REST architecture}

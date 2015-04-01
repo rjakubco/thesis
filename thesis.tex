@@ -182,7 +182,7 @@ Another feature of Camel which is one of the top features for Camel Community an
 
 
 \subsection*{Lightweight framework}
-From the start the whole framework was designed to be undemanding and lightweight as possible. The core library has only about 1.6 MB and third parties dependencies are kept at minimum. This way Camel can be easily embedded into any platform, which can be e.g. OSGi bundle, Spring application, Java EE application or web application. 
+From the start the whole framework was designed to be undemanding and lightweight as possible. The core library has only about 1.6 MB and third parties dependencies are kept at minimum. This way Camel can be easily embedded into any platform, which can be e.g. OSGi\footnote{OSGi} bundle, Spring application, Java EE application or web application. 
 
 \subsection{Message model}
 Until now we talk about sending data from one endpoint to another. That is exactly what is Camel doing but in reality it is sending and receiving messages which encapsulate the data. There two abstractions classes that are use for modelling messages in Camel and these are:
@@ -232,9 +232,46 @@ Out message -- optional message containing reply message if the MEP is set to \t
 
 
 \subsection{Camel's architecture}
+This chapter will describe architecture of the Camel from high-level and then take closer look on some specific concepts. The basic architecture of the Camel is shown in the figure \ref{camelContext} and should help with understanding of the runtime of \textit{CamelContext}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\linewidth]{sources/CamelContextCrop.jpg}
+\caption{Overview of CamelContext}
+\label{camelContext}
+\end{figure}
+
+\subsection*{Camel context}
+From the figure \ref{camelContext} it is clear that CamelContext is somewhat similar to container but more precisely it is Camel's runtime system. This system keeps everything together and provides services during the runtime that are:
+\begin{itemize}
+\item
+Routes -- routes that have been added to the context
+
+\item
+Endpoints --endpoints that have been created in context
+
+\item
+Components -- components used by the application and they can be added on the fly
+
+\item
+Type converters -- loaded type converters by the context
+
+\item
+Data formats -- data formats loaded into to the context
+
+\item
+Languages -- Camel supports different languages used in the expressions and these are loaded into the context
+
+\item
+Registry -- registry is used for the look up of beans. JNDI\footnote{JNDI} registry is used by default, but if Camel is deployed into Spring or OSGi container then it uses native registry mechanism specific to these technologies.
+
+\end{itemize}
+
+\subsection*{Routing engine and routes}
+
 
 \section{Development of the new Camel component}
-\subsection{Camel context}
+
 %\section{Integration}
 %\section{REST architecture}
 %\section{JBoss RESTEasy}

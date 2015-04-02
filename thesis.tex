@@ -272,7 +272,7 @@ The routing engine is the thing that actually moves messages, but is not visible
 
 Routing engine is using routes for its routing. Routes are the essence of the Camel and are the main and only approach how to specify what should be moved where for the routing engine. This means that the route must hold definition of input source to output target. There many possibilities for definition of the route, but the simplest way is to define route as a chain of processors\cite{camel-in-action}. Similar to Message or Exchange, each route has unique identifier that is used for different operation inside of Camel like monitoring, starting or stopping the route. One of the constraint for the route is restriction for the number of input sources, where each route must have exactly one input source that is tied to input endpoint and there can be one or several output targets.
 
-\subsection*{Processors}
+\subsection*{Processor}
 As mentioned before the simplest route consists from the chain of processors. The processor represents a node responsible for using, creating or modifying content of incoming \textit{Exchange} and also its headers. In the chain of processors, exchanges moves during routing from one processor to a another, in the their order defined in the route. This way a route can be seen as graph with nodes where output from the one node is input of another.
 
 As stated previously, almost all built-in processors or their combinations are implementation of EIPs, but Camel also supports implementation of own custom processors and their easy addition to the route.
@@ -281,9 +281,34 @@ As stated previously, almost all built-in processors or their combinations are i
 A components help with modular approach and they are main extension point in Camel. Their main purpose and task is to be a factory of endpoints. As mentioned before developers can create their new components, more information and detail on this topic will be given in subchapter \ref{component-devel}. 
 
 \subsection*{Endpoint}
+An endpoint is a abstraction in the Camel that models the the end of message channel. In other words it represents sender or receiver. Endpoints are configured and referred in route using URIs and Camel also looks up a endpoint during runtime by its defined URI. Format of the URI is show on figure \ref{uri} and it is consisting from three parts: scheme, context path and options. 
+
+The scheme specifies which component should be used. In the figure \ref{uri} is used scheme textit{file} that represents Camel \textit{FileComponent} that creates \textit{FileEndpoint}. The component developed in this thesis uses scheme called \textit{resteasy}. The context path describes the location of specific resource for the endpoint, similar to a web page on the server. The last part of the URI is options that is used for specific configuration of the endpoint.
+
+The last task of endpoint is to be factory for creating producers(sender) and consumers(receiver) that are capable of receiving and sending messages in routes.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{sources/Diagram1.jpeg}
+\caption{Overview of endpoint URI}
+\label{uri}
+\end{figure}
+
+\subsection*{Producer}
+A producer is a entity capable of creating and sending a message to an endpoint. Its main task is creating a exchange and populating it with content compatible with the endpoint specification. For example, \textit{JmsProducer} will map Camel message to JMS message before sending it to JMS destination. The component developed in this thesis acts as HTTP client sending HTTP requests using client API from RESTEasy.
+
+
+\subsection*{Consumer} 
+As stated before, every route has just one starting point and that is a consumer. The consumer is something like receiver of messages, where the message is sent and its task is to wrap the message into \textit{exchange}, add headers. Exchanges created by consumer are then send and routed in defined chain of processors.
+
+Camel defines two types of consumers: event-driven and polling consumers. The event-driven consumer is probably more famous and known because it is associated with client-server architecture and its communication. In EIPs is this consumer referred also as \textit{asynchronous} receiver and its job is to listen on messaging channel, waiting for the incoming messages.
+
+A polling consumer is working little bit different than event-driven consumer. It is active consumer that goes to defined address in endpoint and fetches messages from it. Similar to event-driven consumer, polling consumer has different name in EIP world and it is commonly called \textit{synchronous} receiver. This means that all received message has to be processed before the consumer polls for another one. Common usage of polling consumer in Camel is scheduled polling consumer that checks and polls messages in defined time interval.
+
+
  
 \section{Development of the new Camel component}\label{component-devel}
-
+bla bla bla
 %\section{Integration}
 %\section{REST architecture}
 %\section{JBoss RESTEasy}

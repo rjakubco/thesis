@@ -295,7 +295,7 @@ The last task of endpoint is to be factory for creating producers(sender) and co
 \end{figure}
 
 \subsection*{Producer}
-A producer is a entity capable of creating and sending a message to an endpoint. Its main task is creating a exchange and populating it with content compatible with the endpoint specification. For example, \textit{JmsProducer} will map Camel message to JMS message before sending it to JMS destination. The component developed in this thesis acts as HTTP client sending HTTP requests using client API from RESTEasy.
+A producer is a entity capable of creating and sending a message to an endpoint. Its main task is creating a exchange and populating it with content compatible with the endpoint specification. For example, \textit{JmsProducer} will map Camel message to JMS message before sending it to JMS destination. The producer developed in this thesis acts as HTTP client sending HTTP requests using client API from RESTEasy.
 
 
 \subsection*{Consumer} 
@@ -307,11 +307,39 @@ A polling consumer is working little bit different than event-driven consumer. I
 
 
  
-\section{Development of the new Camel component}\label{component-devel}
-bla bla bla
+\section{Development of the new component}\label{component-devel}
+As already stated, developers can exploit Camel modular architecture and easily extend Camel and add new protocols without necessity to change core of the framework. This is feature is achieved by Camel components and by developing new custom component for new protocol. This section describes some of the fundamental principles associated with creation of the custom Camel component.
+
+Camel is built using Apache Maven\footnote{\url{https://maven.apache.org/}} so the easiest and fastest way to create a custom component from a scratch is to use Maven archetype\footnote{\url{https://maven.apache.org/guides/introduction/introduction-to-archetypes.html}}. Camel offers several archetypes\footnote{\url{http://camel.apache.org/camel-maven-archetypes.html}} for different tasks and projects. Archetype \textit{camel-archetype-component} is used for creating a maven project, that is a base for developing a new custom component\cite{camel-comp}. 
+
+The created project is fully functional \textit{HelloWorld} demo component containing consumer that generates messages and producer for printing them to the console. Modifying this example is great for creating a custom component. The first thing to do is to decide what name will be use in endpoints for referencing the component. This name must be unique so it doesn't create conflict with other components. List of the existing Camel components can be found on official web pages\footnote{\url{http://camel.apache.org/components.html}}
+
+\subsection{Hierarchy of classes}
+Camel component consists from four main classes that together create component and that is  Component, Endpoint, Producer and Consumer. Of course component can have many more classes  used in the component and its correct functionality, but only these 4 are important for creation of correct component in Camel. As stated before their relationship is that everything starts with Component class, which creates an Endpoint. An endpoint then creates Producers and Consumers.
+
+Once again Camel offers some default classes for each of these classes, that can be extended for easier development and not everything needs to be created from the scratch.
+
+\subsection*{Component class}
+Main job of this class is to be a factory of endpoints. This class needs to implement \textit{Component} interface and primarily implement its \textit{createEndpoint()} method. The easiest way to achieve this is to extend \textit{DefaultComponent} class. Of course there is also possibility to extend other component classes from other components and leverage theirs functionality.
+
+\subsection*{Endpoint class}
+Main task of endpoints is to be factory for Consumers and Producers. Endpoint class needs to implement Endpoint interface that has creation methods for both of them. The simplest way is to extend DefaultEndpoint. Also not all components has to have both Producer and Consumer. It is common that in some components one of them is not needed or doesn't make sense in regards to used technology. This class can also contains all parameters that can be set as URI options on the endpoint. Parameters are usually annotated with @UriParams annotation and set though reflection by Camel.
+
+\subsection*{Consumer and Producer class}
+As already stated, Consumer is starting point though which messages enter the route. Camel of course offers some default implementation for event-driven and polling consumers. This class has no major restrictions how should be implemented, it just needs to implement \textit{Consumer} interface with its method \textit{getEndpoint()}. In the component developed in this thesis, \textit{ResteasyConsumer} connects to running web servlet and it is consuming requests and responses from the RESTEasy web service. 
+
+Producer class is responsible for sending messages outside. Similar to Consumer class there are no given restrictions on the implementation, it just needs to implement \textit{Producer} interface, which extends from the \textit{Processor} interface that has only one method \textit{process()}. But it is recommended to extend \textit{DefaultProducer} class to keep it simple. \textit{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
+
+
+\section{JBoss RESTEasy}
+\subsection{REST architecture}
+\subsection{RESTful webservices}
+\subsection{JAX-RS 1.0}
+\subsection{JAX-RS 2.0}
+
 %\section{Integration}
 %\section{REST architecture}
-%\section{JBoss RESTEasy}
+%
 %\subsection{RESTful webservice}
 %\subsection{JAX-RS 1.0}
 %\subsection{JAX-RS 2.0}
@@ -357,6 +385,7 @@ bla bla bla
 \bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 19-351-8236-6.
 \bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
 \bibitem{camel-exchange} http://camel.apache.org/exchange-pattern.html
+\bibitem{camel-comp} http://camel.apache.org/creating-a-new-camel-component.html
 
 \bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
 

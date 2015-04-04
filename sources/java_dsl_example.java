@@ -1,2 +1,2 @@
-from("undertow://localhost:8888/myapp")
-    .to("file:log/access.log");
+from("resteasy:/say/hello?servletName=restServlet")
+    .to("file:log/response.log");

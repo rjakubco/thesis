@@ -1,0 +1,9 @@
+// consumer pattern to follow
+"resteasy:/{path}?[{uriOptions}]"
+
+"resteast:/say/foo?servletName=restServlet&matchOnUriPrefix=true"
+
+// producer pattern to follow
+"resteasy://{host}:{port}/{path}?[{uriOptions}]"
+
+"resteasy://localhost:8080/foo?resteasyMethod=POST"

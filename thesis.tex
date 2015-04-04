@@ -164,7 +164,7 @@ By default Camel ships with the few most basic components called camel-core. Thi
 
 
 \subsection*{Configuration}
-As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things.  This is reflected on configuration of endpoints in route definitions with URI options as can be seen on example \ref{uri-option}.
+As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things. This is reflected on configuration of endpoints in route definitions with URI\footnote{Uniform Resource Identifier} options as can be seen on example \ref{uri-option}.
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/uri.java}
 	\caption{URI options configurations}
@@ -206,8 +206,8 @@ Body is representing content of the message and its type is generic Java Object,
 \subsection*{Exchange}
 An \textit{Exchange} is defined as message's container encapsulating the \textit{Message} used during routing. There are various types of interactions between systems and they are supported by the \textit{Exchange}. These interactions are called message exchange patterns (MEPs) and they are used to specify messaging styles in the property of the  \textit{Exchange}. This property has to two different messaging styles where one is one-way and the other one is request-response. 
 
-The request-response or \textit{InOut} called in the Camel, is probably the more well-known style because it is used in HTTP-based transport, where client requests to retrieve a web page and it is waiting for the reply from the server. One-way is defined as \textit{InOnly} and for example is primarily use in JMS, where message is sent to the queue and sender doesn't need any response from the queue. These two types are just the basic ones, but Camel provides few more special cases\footnote{Exchange patterns in Camel\url{
-http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/ExchangePattern.html}}.\cite{camel-exchange}
+The request-response or \textit{InOut} called in the Camel, is probably the more well-known style because it is used in HTTP-based transport, where client requests to retrieve a web page and it is waiting for the reply from the server. One-way is defined as \textit{InOnly} and for example is primarily use in JMS, where message is sent to the queue and sender doesn't need any response from the queue. These two types are just the basic ones, but Camel provides few more special cases\footnote{http://tinyurl.com/exchangePattern}.\cite{camel-exchange}
+%http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/ExchangePattern.html
 
 The \textit{Exchange} is little bit more complex than the \textit{Message} and it is consisting from\cite{camel-in-action}:
 \begin{itemize}
@@ -331,11 +331,136 @@ As already stated, Consumer is starting point though which messages enter the ro
 Producer class is responsible for sending messages outside. Similar to Consumer class there are no given restrictions on the implementation, it just needs to implement \textit{Producer} interface, which extends from the \textit{Processor} interface that has only one method \textit{process()}. But it is recommended to extend \textit{DefaultProducer} class to keep it simple. \textit{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
 
 
-\section{JBoss RESTEasy}
-\subsection{REST architecture}
+\section{REST}
+For most of people in modern world, World Wide Web is almost fundamental part of their life and they take it for granted. It is a given fact that Web has been very successful and it has grown from simple network for researchers and academics to interconnected worldwide community. 
+
+Roy Fielding tried to understand this phenomenon and find out what was the reason or factor for this incredible change in his PhD thesis, Architectural Styles and the Design of Network-based Software Architectures\cite{rest-arch}. In it, he asks three important questions connected with the Web:
+\begin{itemize}
+\item
+Why is the Web so prevalent and ubiquitous?
+
+\item 
+What makes the Web scale?
+
+\item
+How can I apply the architecture of the Web to my own applications?
+\end{itemize}
+
+From answers to these questions, he identifies five specific architecture principles called Representation State Transfer (REST) and these principles are:
+
+\begin{itemize}
+\item
+Addressable resources -- resource is REST is abstraction of information and data and it must be addressable via URI.
+
+\item
+A uniform, constrained interface -- in your application use only small set of well-defined methods that manipulate with resources.
+
+\item
+Representation-oriented -- a resource referenced by one URI can have many different formats, similar to different platforms that need different formats, e.g. HTML\footnote{HyperText Markup Language} for web browsers or JavaScript needs JSON\footnote{JavaScript Object Notation}. REST application should interact with services using representations of that service. 
+
+\item
+Communicate statelessly -- stateless applications can be scale more easily.
+
+\item
+HATEOAS\footnote{Hypermedia as The Engine of Application State} -- data formats should drive state transitions in the application
+
+\end{itemize}
+
+These principles are the reasons, why Web became so successful, enormous and pervasive.\cite{resteasy-book}
+
+\subsection{REST over HTTP}
+REST architecture isn't protocol-specific, but it is usually associated with HTTP protocol. The HTTP protocol is primarily used in browser-based web applications, but these application don't fully leverage all features from it. There are also others web technologies like SOAP\footnote{Simple Object Access protocol} that uses HTTP protocol only for transmission and use only small fraction of its capabilities. Because of this, it may seems like HTTP protocol is not very useful and it has only small set of features. 
+
+In reality, HTTP is very rich and powerful synchronous request/response-based application network protocol with many useful and interesting capabilities for developers. It is used for distributed, collaborative, document-based systems. The protocols works in simple way, the client sends request message with defined HTTP method to be invoked, headers, location of resource for invocation and it can also contain message body that can almost anything.
+
+The server that handled the requests message, will send response message with response code, message explaining the code, headers and optional message body. HTTP defines several response codes for different scenarios\footnote{\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}}.\cite{resteasy-book}
+
 \subsection{RESTful webservices}
-\subsection{JAX-RS 1.0}
-\subsection{JAX-RS 2.0}
+As stated previously, REST was really just explanation for Web's success and growth, but after few years after publication of Fielding's PhD thesis, developers realized real potential of REST. They realized that concepts described in REST architecture can be used for building distributed services and modelling SOAs\footnote{Service-Oriented Architectures}. 
+
+SOA is a design pattern that is used for a long time. The simplest description of main concept and idea of SOA is that systems should be designed as set of small reusable, decoupled and distributed services. By combining these services and publishing them on the network, should create larger and more complex systems. There were several technologies used for building SOAs in the past like CORBA or Java RMI. Nowadays, most associated technology with SOA are SOAP-based web services\footnote{Simple Object Access Protocol}.  
+
+
+\subsection{RESTful architectural principles}
+Web service build upon principles of REST architecture are called RESTful web services. These services are used for building system based on SOA principles. This section will describe each of the architectural principles of REST in more detail and explain why these principles are important for writing a web service.
+
+
+\subsection*{Addressability}
+Addressability in the systems means that every resource is reachable by unique identifier. For this standardized object identity in environment is needed, which is not so common in environments. In RESTful services, addressability is achieved by use of URIs and each HTTP request must contain URI of the object that is requested. The format of URI must be of course standardized and it shown on example \ref{rest-uri}.
+
+\begin{listing}[ht]
+	\inputminted[]{bash}{sources/rest-uri.java}
+	\caption{URI format}
+	\label{rest-uri}
+\end{listing}
+
+The format  URI is break down to six parts, where first part is \textit{scheme} that specifies protocol used for communication, in RESTful web is usually \textit{http} or \textit{https}. Next ones are \textit{host} that contains DNS\footnote{Domain Name System} name or IP address and optional \textit{port}. These two parts represent location of resource on the network. After them is \textit{path} part that specifies path to desired resource, similar to directory list of a file on file system. Last two parts are optional where \textit{query} is list of parameters represented as name-value pairs delimited by "\&" character and \textit{fragment} is usually used to point in certain place in queried document.
+
+\subsection*{A uniform, constrained interface}
+To fulfil this principle of REST, application must only use finite set of operations of the application protocol on which are its services distributed. When developing RESTful web service this means only use methods of HTTP protocol. There are only few operational methods defined on HTTP where each method has specific purpose and these methods are:
+
+\begin{itemize}
+\item
+\textit{GET} -- read-only operation used for querying server for specific information. This operation is idempotent, which means that applying this operation many times, the result is always the same. It also safe in meaning that it doesn't change state of the server.
+
+\item
+\textit{PUT} -- operation used for storing message body on the server, usually modelled as insert or update. It is also idempotent, because sending the same message more than once has no effect on server.
+
+\item
+\textit{DELETE} -- the name is self explanatory, idempotent operation for removing resources.
+
+\item
+\textit{POST} -- operation for modifying (updating) service. It is only nonidempotent and unsafe operation of HTTP. This means that request may or may not contain information and also response may or may not contain information.
+
+\item
+\textit{HEAD} -- similar to \textit{GET} except no body is returned, only headers and response code.
+
+\item
+\textit{OPTIONS} -- operation for getting information about communication options. Mainly used for getting information on capabilities of the server and a resource without triggering any action.
+
+\item
+\textit{TRACE} and \textit{CONNECT} -- unimportant operations without any use in RESTful web service.
+\end{itemize}
+
+Plus constraining interface of web service has few more advantages. One them is \textit{interoperability}. HTTP is ubiquitous protocol and almost all modern programming languages have HTTP client library. So, it makes sense to expose web service over HTTP, because people will able to use the exposed web service without any additional requirements. Older technologies have vendor specific client libraries and generated stub codes like \textit{WSDL} files, that creates problem with vendor interoperability in the applications. RESTful web services don't have this problems and developers can focus on more important things in the application.
+
+A constrained interface with its well-defined methods have predictable behaviour that can be leverage for for better performance. This means RESTful web services are better in scaling, which is another advantage and that is \textit{scalability}. RESTful web services are taking advantage of caching mechanism of HTTP protocol. HTTP has very rich configuration for caching semantics that can be used for better performance. So, it is possible to configure caching semantics on defined method and make the same calls on same clients load much faster, because most of the information were cached on the first call. This is use of the same principle as with web pages and browsers. 
+
+\subsection*{Representation-oriented}
+Complexity of interaction between client and server in RESTful application is in representations being sent back and forth. 
+
+
+\subsection*{Stateless communication}
+
+\subsection*{HATEOAS}
+
+
+
+%JAX-RS: Java API for RESTful Web Services (JAX-RS) is a Java programming language API that provides support in creating web services according to the Representational State Transfer (REST) architectural pattern.[1] JAX-RS uses annotations, introduced in Java SE 5, to simplify the development and deployment of web service clients and endpoints.
+%
+%From version 1.1 on, JAX-RS is an official part of Java EE 6. A notable feature of being an official part of Java EE is that no configuration is necessary to start using JAX-RS. For non-Java EE 6 environments a (small) entry in the web.xml deployment descriptor is required.
+%
+%
+%
+
+%
+%\subsection{JBoss RESTEasy}
+%\subsection{New features of JAX-RS 2.0}
+%RESTEasy is a JBoss project that provides various frameworks to help you build RESTful Web Services and RESTful Java applications. It is a fully certified and portable implementation of the JAX-RS specification. JAX-RS is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol.
+%
+% JAX-RS, JSR-311, is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol. Resteasy is an portable implementation of this specification which can run in any Servlet container. Tighter integration with JBoss Application Server is also available to make the user experience nicer in that environment. While JAX-RS is only a server-side specification, Resteasy has innovated to bring JAX-RS to the client through the RESTEasy JAX-RS Client Framework. This client-side framework allows you to map outgoing HTTP requests to remote servers using JAX-RS annotations and interface proxies.
+% 
+%\section{Existing RESTful components}
+%\subsection{Camel Restlet}
+%\subsection{Camel CXF}
+%\subsection{Camel Rest}
+%\subsection{Camel Spark-rest}
+%\subsection{Camel Servlet}
+%\subsection{Camel Jetty}
+%\subsection{Camel Resteasy -- motivation}
+
+
+
 
 %\section{Integration}
 %\section{REST architecture}
@@ -381,15 +506,28 @@ Producer class is responsible for sending messages outside. Similar to Consumer 
 \bibliography{references}
 
 \begin{thebibliography}{}
-\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, li, ISBN 978-0321200686.
-\bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, xxxi, ISBN 19-351-8236-6.
+\bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, ISBN 978-0321200686.
+
+\bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, ISBN 19-351-8236-6.
+
 \bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
+
 \bibitem{camel-exchange} http://camel.apache.org/exchange-pattern.html
+
 \bibitem{camel-comp} http://camel.apache.org/creating-a-new-camel-component.html
+
+\bibitem{resteasy-book} BURKE, Bill. \textit{RESTful Java with JAX-RS 2.0}. Sebastopol: O'Reilly Media, c2013, ISBN 978-1-449-36134-1
+
+\bibitem{rest-arch} FIELDING, Roy Thomas. \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine, 2000. 
+
+\bibitem{resteasy} http://resteasy.jboss.org/
 
 \bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
 
-\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}			
+\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}		
+
+\bibitem{jax-rs-2.0-new} http://www.infoq.com/news/2013/06/Whats-New-in-JAX-RS-2.0
+\bibitem{} http://java.dzone.com/articles/whats-new-jax-rs-20 	
 
 %
 \bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.

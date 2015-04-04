@@ -1,5 +1,5 @@
 public void configure() {
-       from("undertow://http://localhost:8080/dsl/hello")
-       .transform(simple("Camel Undertow response"
+       from("resteasy:/say/hello?servletName=restServlet")
+       .transform(simple("Overriding response message"
                         +" from Java DSL route."));
 }

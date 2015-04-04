@@ -1,0 +1,4 @@
+<route>
+   <from uri='undertow://localhost:8888/myapp'/>
+   <to uri='file:log/access.log'/>
+</route>

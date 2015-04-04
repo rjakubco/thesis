@@ -1,4 +1,4 @@
 <route>
-   <from uri='undertow://localhost:8888/myapp'/>
-   <to uri='file:log/access.log'/>
+   <from uri='resteasy:/say/hello?servletName=restServlet'/>
+   <to uri='file:log/response.log'/>
 </route>

@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+// URI format
+\PYGtrac{l+s+s2}{\PYGtracZdq{}\PYGtracZob{}scheme\PYGtracZcb{}://\PYGtracZob{}host\PYGtracZcb{}:\PYGtracZob{}port\PYGtracZcb{}/\PYGtracZob{}path\PYGtracZcb{}?\PYGtracZob{}query\PYGtracZcb{}\PYGtracZsh{}\PYGtracZob{}fragment\PYGtracZcb{}\PYGtracZdq{}}
+
+// example of actual URI
+\PYGtrac{l+s+s2}{\PYGtracZdq{}http://restexample.com/customers?firstName=Roman\PYGtracZam{}age=25\PYGtracZdq{}}
+	
+\end{Verbatim}

@@ -1,0 +1,9 @@
+<route id="undertow-route">
+      <from uri="undertow:http://localhost:
+                                8080/spring/hello"/>
+      <transform>
+          <simple>
+          Camel Undertow response from Spring route.
+          </simple>
+      </transform>
+</route>

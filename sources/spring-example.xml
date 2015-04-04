@@ -1,9 +1,8 @@
 <route id="undertow-route">
-      <from uri="undertow:http://localhost:
-                                8080/spring/hello"/>
+      <from uri="resteasy:/say/hello?servletName=restServlet"/>
       <transform>
           <simple>
-          Camel Undertow response from Spring route.
+          Camel Resteasy response from Spring route.
           </simple>
       </transform>
 </route>

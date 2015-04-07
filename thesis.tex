@@ -96,6 +96,7 @@
 
 %% Keywords (required)
 \begin{ThesisKeyWords}
+Apache Camel, RESTEasy, JAX-RS, REST, RESTful, integration framework, component, web service
 
 \end{ThesisKeyWords}
 
@@ -427,49 +428,131 @@ Plus constraining interface of web service has few more advantages. One them is 
 A constrained interface with its well-defined methods have predictable behaviour that can be leverage for for better performance. This means RESTful web services are better in scaling, which is another advantage and that is \textit{scalability}. RESTful web services are taking advantage of caching mechanism of HTTP protocol. HTTP has very rich configuration for caching semantics that can be used for better performance. So, it is possible to configure caching semantics on defined method and make the same calls on same clients load much faster, because most of the information were cached on the first call. This is use of the same principle as with web pages and browsers. 
 
 \subsection*{Representation-oriented}
-Complexity of interaction between client and server in RESTful application is in representations being sent back and forth. 
+Complexity of interaction between client and server in RESTful application is in representations being sent back and forth. Representations can be for almost in any format used in systems, for example XML, JSON, stream, YAML\footnote{YAML Ain't Markup Language}. Because RESTful web services are communicating via HTTP, messages bodies of requests and responses are acting as representations.
+
+HTTP provides \textit{Content-Type} header for specification of data formats use between client and server. Value of this header is string in MIME\footnote{Multipurpose Internet Mail Extension} format, which is very simple: \textit{type/subtype;name=value;name=value}. Where \textit{type} is the main format family and \textit{subtype} is category. Plus there is possibility to define name/value properties. Some of the common examples are :
+
+\begin{itemize}
+\item
+\textit{text/plain}
+
+\item
+\textit{application/xml}
+
+\item
+\textit{text/html;charset=iso-8859-1}
+\end{itemize}
+
+Another feature of HTTP is possibility for negotiation of the message formats sent between client and server, which very useful in web services. There is possibility to define \textit{Accept} header on client that describes preferred formats of responses. This can be used for definition of services on the same URIs and same methods but with different return MIME type. Using this, application can have similar methods but each for different client with its preferred data format.
+
+\subsection*{Stateless communication and HATEOAS}
+Next mentioned principle of RESTful web service is its statelessness, but that mean the application cannot have a state. Stateless in RESTful means that server doesn't store any client session data and instead only manages states of resources it exposes. Session specific data, if they are needed, must be maintained by client and can be send with request if needed. This feature can be leverage for easier scaling in clustered environments because only machines need to be added for scale up. 
+
+The last principle of RESTful web service is HATEOS where the main idea is using Hypermedia As The Engine of Application State (HATEOAS). This approach is very useful because hypermedia have added support for embedding links to other services or information within document format. One of the uses is for example aggregating complex sets of information from different sources and using hyperlinks in document to reference additional information without bloating responses. But the "engine" part is much more useful because it is different approach from traditional and older distributed applications that have list of services they know exist. These applications then call central server for location of these services. Instead RESTful web services with HATEOAS with each response returned from a server define new possible interactions that can be done next, as well transition state of application.
+
+\section{JBoss RESTEasy}
+JBoss RESTEasy is project providing frameworks for building RESTful Web Services and RESTful Java applications. This means that it is a fully certified and portable implementation of the JAX-RS specification which can run in any servlet container. It is also no surprise that it is fully integrated with JBoss Application Server to make better experience in that environment. To understand better what exactly is JBoss RESTEasy, it is required to understand what exactly is JAX-RS.\cite{resteasy-doc}
+
+ 
+\subsection{JAX-RS 1.0 and 1.1}
+RESTful services could be developed in Java for a long time using servlet API, but this approach is really hard and requires lot of code for simple operations. To simplify implementation of RESTful service, a new specification was defined in 2008 called JAX-RS. JAX-RS is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol. This section will just provide some basic information about the this specification. The more detailed description and documentation can be found on official web page of JAX-RS\footnote{\url{https://jax-rs-spec.java.net/}} or on RESTEasy web page\footnote{\url{http://resteasy.jboss.org/}}. 
+
+JAX-RS is a framework that focus on applying Java annotations introduced in Java SE 5 on plain Java objects. JAX-RS API is part of JSR-311\footnote{\url{https://jcp.org/en/jsr/detail?id=311}}. To simplify development of RESTful web services, this framework has annotations to bind specific URI patterns and HTTP methods to individual method in basic Java class. It has also parameter injection annotations for easier parsing of information from HTTP requests. Another feature is message body readers and writers for decoupling data format marshalling and unmarshalling from custom Java objects. Also it has exception mappers for mapping application-thrown exceptions to HTTP response code and message. The last useful feature that it provides are facilities for HTTP content negotiation.\cite{resteasy-book}\cite{jax-wiki}
+
+JAX-RS 1.1 is upgrade version of the same framework with few changes. The biggest one is that is became official part of Java EE 6, which means that no configuration is necessary to start using JAX-RS. Some of  the enhancements to framework include adding examples to clarifying and correcting Javadoc comments related to use of JAX-RS. There was also added new annotation \textit{@ApplicationPath}, which can be use to specify base URI for all \textit{@Path} annotations. Complete list of all changes can be found in official changelog\footnote{\url{https://jcp.org/aboutJava/communityprocess/maintenance/jsr311/311changelog.1.1.html}}. \cite{jax-1.1}\cite{jax-1.1-2}
+
+It is important to note that both JAX-RS 1.0 and 1.1 are only server-side specifications without any support for client. Because of that, RESTEasy innovated JAX-RS and added RESTEasy JAX-RS Client framework and more about this technology in subsection \ref{resteasy}. But this drawback was removed in version 2.0 and will be described to more detail in next subsection.
+
+\subsection{JAX-RS 2.0}\label{jax2.0}
+With Java EE 7 release also came new version of JAX-RS 2.0 that upgraded the framework and added new features from which the key features are:
+\begin{itemize}
+\item
+Client API
+
+\item 
+Server-side asynchronous HTTP
+
+\item
+Filters and interceptors
+\end{itemize}
+
+This subsection provides basic overview of mentioned features. Of course there are other minor features and upgrades to make the framework more useful and stable.
+
+\subsection*{Client API}
+Both previous versions of JAX-RS were missing client API, as it was stated previously. Because of this missing feature, each implementation of JAX-RS created their own client API, which is not so great for standardized framework. So version 2.0 contains fluent, low-level, request building API that can be seen on example \ref{rest-client}. 
+
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/client.java}
+	\caption{Client API}
+	\label{rest-client}
+\end{listing}
+
+The base of the API is \textit{Client} interface that manages HTTP connections and acts also as factory for \textit{WebTargets}. \textit{WebTarget} represents specific URI for the request and whole request is build and executed on it. In most times the return object is \textit{Response} from which \textit{readEntity()} method is use for getting the entity. API also provides way to get specific Java object directly without working with \textit{Response} object as shown on example \ref{rest-client} with \textit{Car} object.
+
+Client API also provides support for asynchronous requests which can be use for execution of HTTP requests in the background. There are two possibilities to get the response and that is either polling or receiving a callback. For polling is used \textit{Future} interface which is part of JDK from version 5.0 and client example with \textit{Future} is shown on \ref{future}. For callbacks is used \textit{InvocationCallback} interface shown on example \ref{callback}, where request is registered with callback instance and invoked in the background. The interface depending on the status of response executes a defined code\cite{jax-rs-2.0-new}\cite{jax-rs-2.0}. Client example with callback is shown on example \ref{callbackClient}.
+
+This subsection just gave a quick look on Client API. For more detail about Client API check specification and Javadoc.
+
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/callback.java}
+	\caption{InvocationCallback interface}
+	\label{callback}
+\end{listing}
+
+\subsection*{Asynchronous server-side}
+Typical HTTP server works in a way that when requests comes in, one thread is responsible for the processing and generating response to the client. This is no problem because requests are short-lived, so few hundred threads can handle few thousand concurrent users with good response times. This was fine until evolution of services and HTTP traffic with JavaScript clients. One scenario started to became a problem and that is scenario where server needs to push events to the client. In this scenario, clients need to know actual information from the server, for example stock price, so they usually send GET request and just block indefinitely until server was ready to send back response. With many clients, this creates large amount of open, long-running requests that are just idling and with them threads too. This scenario is very consuming on operating systems resources and it is really hard to scale up these server-push applications because JAX-RS had one thread per connection model.\cite{resteasy-book}
+
+To conquer this problem, JAX-RS 2.0 provides a new feature and that is support for asynchronous HTTP. With it, it is possible to suspend current server-side request and have different thread handle sending back the response to the client. This feature can be used to implement long-polling interfaces or server-side push as mentioned. The server-side push problem can be resolved with small set of threads delegated just for sending the responses back to polling clients.
+
+This feature is very analogous to Servlet 3.0 specification and similar to other features of JAX-RS is also annotation driven. To use this feature, application must interact with \textit{AsyncResponse} interface. This is done by injecting this interface into JAX-RS method with \textit{@Suspend} annotation.\cite{resteasy-book}\cite{jax-rs-2.0} Example is provided in \ref{async-server} and more detail information can be found in specification and Javadoc.
+
+\subsection*{Filters and entity interceptors}
+Last notable new feature of JAX-RS 2.0 are filters and entity interceptors. They are use for intercepting requests and response processing. Notable use cases are authentication, caching or encoding. Similar to Client API, most JAX-RS provides implemented their own interceptor prior to version 2.0. The framework defines two concepts for interceptions and they are:
+\begin{itemize}
+\item 
+filters
+
+\item
+entity interceptors
+\end{itemize}
+
+Filters are used for modification or processing of incoming and outgoing requests or responses. They are executed before and after request and response processing. Main task for entity interceptors is marshalling and unmarshalling of message bodies.
+
+In filters, there are two main groups: server side filters and client side filters. Both groups have 2 different filter for request and response. Server side filters are \textit{ContainerRequestFilter} that runs before JAX-RS resource method is invoked and \textit{ContainerResponseFilter} that runs after invocation of resource method. Added feature for ContainerRequestFilter is possibility to specify when the filter should be invoked, before resource method is matched or after it is matched. This is defined by \textit{@PreMatching} and \textit{@PostMatching} annotations. Client side filters have also two types: ClientRequestFilter and ClientResponseFilter where request filters run before sending the HTTP request to the server and response filters run after receiving response from the server, but before the response body is unmarshalled. \cite{jax-rs-2.0}\cite{resteasy-book}
+
+Interceptors deal with message bodies and are executed in the same call stack as their corresponding reader and writer. Again there are two different types. One type is \textit{ReaderInterceptor} that wraps around \textit{MessageBodyReaders} and the second type is \textit{WriterInterceptor} that wraps around \textit{MessageBodyWriters}. They are many uses like implementation of specific encoding, generating digital signatures or posting and preprocessing Java object before or after it is marshalled.\cite{jax-rs-2.0}
 
 
-\subsection*{Stateless communication}
-
-\subsection*{HATEOAS}
+%\subsection{Features of RESTEasy}\label{resteasy}
 
 
+\section{Existing RESTful components}
+The official distribution of Camel already provides several components that are used for integration with RESTful web services. There are mainly similar project to RESTEasy, that are also certified implementations of JAX-RS 2.0 specification. Notable examples are:
+\begin{itemize}
+\item
+Camel CXF
 
-%JAX-RS: Java API for RESTful Web Services (JAX-RS) is a Java programming language API that provides support in creating web services according to the Representational State Transfer (REST) architectural pattern.[1] JAX-RS uses annotations, introduced in Java SE 5, to simplify the development and deployment of web service clients and endpoints.
+\item
+Camel Restlet
+
+\item
+Camel Spark-rest
+
+\item
+Camel Rest
+\end{itemize}
+
+Each component and technology has specific pros and cons. Spark-rest is component integrating Spark Rest Java library running only on Java 8 and supporting only consumer endpoint. Restlet and CXF components are integrating Restlet and CXF frameworks, both have producer and consumer endpoints along with few bonus features. 
+
+Last component is Camel Rest that was added in Camel 2.14 and it is used for defining REST endpoints using Rest DSL\footnote{\url{http://camel.apache.org/rest-dsl.html}} right in the camel route. There is also possibility to configure this component to use some other RESTful component as base. Any component can be integrated with Rest DSL if they have Rest consumer in Camel. For the integration, new component must implemented \textit{RestConsumerFactory} and the component itself then must implement logic to create a Camel consumer that exposes the REST services based on the given parameters, such as path, verb, and other options.
+
+\subsection{Camel Resteasy -- motivation}
+As for now Camel already provides lot of RESTful components, so why exactly do we need a new RESTful component if there are components capable to satisfy user's needs. Best answer is probably, because we can. If there are more implementations of JAX-RS specification, then there should be more Camel components for each. This way, users are not limited and can choose component fro their preferred implementation. 
+
+Another thing to consider is tight connection between RESTEasy and products like JBoss EAP, JBoss AS or WildFly. All these servers have RESTEasy integrated and are using out for box. Adding possibility to also create Camel routes integrated with RESTEasy on these servers can possibly help lot of users which are already familiar with RESTEasy framework. Of course they is no problem to deploy application with CXF implementation and user Camel CXF component on these servers, but complicate things if we can just create Camel RESTEasy component. 
+
 %
-%From version 1.1 on, JAX-RS is an official part of Java EE 6. A notable feature of being an official part of Java EE is that no configuration is necessary to start using JAX-RS. For non-Java EE 6 environments a (small) entry in the web.xml deployment descriptor is required.
-%
-%
-%
-
-%
-%\subsection{JBoss RESTEasy}
-%\subsection{New features of JAX-RS 2.0}
-%RESTEasy is a JBoss project that provides various frameworks to help you build RESTful Web Services and RESTful Java applications. It is a fully certified and portable implementation of the JAX-RS specification. JAX-RS is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol.
-%
-% JAX-RS, JSR-311, is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol. Resteasy is an portable implementation of this specification which can run in any Servlet container. Tighter integration with JBoss Application Server is also available to make the user experience nicer in that environment. While JAX-RS is only a server-side specification, Resteasy has innovated to bring JAX-RS to the client through the RESTEasy JAX-RS Client Framework. This client-side framework allows you to map outgoing HTTP requests to remote servers using JAX-RS annotations and interface proxies.
-% 
-%\section{Existing RESTful components}
-%\subsection{Camel Restlet}
-%\subsection{Camel CXF}
-%\subsection{Camel Rest}
-%\subsection{Camel Spark-rest}
-%\subsection{Camel Servlet}
-%\subsection{Camel Jetty}
-%\subsection{Camel Resteasy -- motivation}
-
-
-
-
-%\section{Integration}
-%\section{REST architecture}
-%
-%\subsection{RESTful webservice}
-%\subsection{JAX-RS 1.0}
-%\subsection{JAX-RS 2.0}
-%
-%\chapter{Analysis and Design}
+\chapter{Analysis and Design}
 %\section{Requirements}
 %\subsection{Camel consumer}
 %\subsection{Camel producer}
@@ -520,14 +603,20 @@ Complexity of interaction between client and server in RESTful application is in
 
 \bibitem{rest-arch} FIELDING, Roy Thomas. \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine, 2000. 
 
-\bibitem{resteasy} http://resteasy.jboss.org/
+\bibitem{jax-1.1} http://www.javaworld.com/article/2073264/jax-rs-1-1--what-s-new-.html
+\bibitem{jax-1.1-2} http://www.infoq.com/news/2010/02/javaee6-rest
+
+\bibitem{resteasy-doc}\url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html}
+
+\bibitem{jax-wiki} \url{http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services}
 
 \bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
 
 \bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}		
 
 \bibitem{jax-rs-2.0-new} http://www.infoq.com/news/2013/06/Whats-New-in-JAX-RS-2.0
-\bibitem{} http://java.dzone.com/articles/whats-new-jax-rs-20 	
+
+\bibitem{jax-rs-2.0} http://java.dzone.com/articles/whats-new-jax-rs-20 	
 
 %
 \bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
@@ -546,7 +635,23 @@ Complexity of interaction between client and server in RESTful application is in
 \appendix
 
 \chapter{Appendix}
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/future.java}
+	\caption{Future example}
+	\label{future}
+\end{listing}
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/callbackClient.java}
+	\caption{Callback example}
+	\label{callbackClient}
+\end{listing}
 
+%TODO
+\begin{listing}[ht]
+	\inputminted[]{java}{sources/todo.java}
+	\caption{Asynchronous server-side}
+	\label{async-server}
+\end{listing}
 
 %% End of the whole document
 \end{document}

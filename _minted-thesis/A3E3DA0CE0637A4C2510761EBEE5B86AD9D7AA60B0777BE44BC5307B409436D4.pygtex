@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n}{Future}\PYGtrac{o}{\PYGtracZlt{}}\PYGtrac{n}{Customer}\PYGtrac{o}{\PYGtracZgt{}}\PYGtrac{n}{future} \PYGtrac{o}{=} \PYGtrac{n}{client}\PYGtrac{o}{.}\PYGtrac{n+na}{target}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}http://e.com/customers\PYGtracZdq{}}\PYGtrac{o}{)}
+\PYGtrac{o}{.}\PYGtrac{n+na}{queryParam}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}name\PYGtracZdq{}}\PYGtrac{o}{,} \PYGtrac{l+s}{\PYGtracZdq{}Bill Burke\PYGtracZdq{}}\PYGtrac{o}{).}\PYGtrac{n+na}{request}\PYGtrac{o}{().}\PYGtrac{n+na}{async}\PYGtrac{o}{()}
+\PYGtrac{o}{.}\PYGtrac{n+na}{get}\PYGtrac{o}{(}\PYGtrac{n}{Customer}\PYGtrac{o}{.}\PYGtrac{n+na}{class}\PYGtrac{o}{);} 
+
+\PYGtrac{k}{try} \PYGtrac{o}{\PYGtracZob{}}
+  \PYGtrac{n}{Customer} \PYGtrac{n}{cust} \PYGtrac{o}{=} \PYGtrac{n}{future}\PYGtrac{o}{.}\PYGtrac{n+na}{get}\PYGtrac{o}{(}\PYGtrac{l+m+mi}{1}\PYGtrac{o}{,} \PYGtrac{n}{TimeUnit}\PYGtrac{o}{.}\PYGtrac{n+na}{MINUTES}\PYGtrac{o}{);}
+\PYGtrac{o}{\PYGtracZcb{}} \PYGtrac{k}{catch} \PYGtrac{o}{(}\PYGtrac{n}{TimeoutException} \PYGtrac{n}{ex}\PYGtrac{o}{)} \PYGtrac{o}{\PYGtracZob{}}
+  \PYGtrac{n}{System}\PYGtrac{o}{.}\PYGtrac{n+na}{err}\PYGtrac{o}{.}\PYGtrac{n+na}{println}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}timeout\PYGtracZdq{}}\PYGtrac{o}{);}
+\PYGtrac{o}{\PYGtracZcb{}}
+\end{Verbatim}

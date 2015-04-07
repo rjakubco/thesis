@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n}{InvocationCallback}\PYGtrac{o}{\PYGtracZlt{}}\PYGtrac{n}{Response}\PYGtrac{o}{\PYGtracZgt{}} \PYGtrac{n}{callback} \PYGtrac{o}{=} \PYGtrac{k}{new} \PYGtrac{n}{InvocationCallback} \PYGtrac{o}{\PYGtracZob{}}
+  \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{completed}\PYGtrac{o}{(}\PYGtrac{n}{Response} \PYGtrac{n}{res}\PYGtrac{o}{)} \PYGtrac{o}{\PYGtracZob{}}
+    \PYGtrac{c+c1}{//do something}
+  \PYGtrac{o}{\PYGtracZcb{}}  
+
+  \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{failed}\PYGtrac{o}{(}\PYGtrac{n}{ClientException} \PYGtrac{n}{e}\PYGtrac{o}{)} \PYGtrac{o}{\PYGtracZob{}}
+     \PYGtrac{c+c1}{// do something}
+  \PYGtrac{o}{\PYGtracZcb{}}
+\PYGtrac{o}{\PYGtracZcb{};}
+\end{Verbatim}

@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n}{Client} \PYGtrac{n}{client} \PYGtrac{o}{=} \PYGtrac{n}{ClientFactory}\PYGtrac{o}{.}\PYGtrac{n+na}{newClient}\PYGtrac{o}{();}
+
+\PYGtrac{n}{WebTarget} \PYGtrac{n}{target} \PYGtrac{o}{=} \PYGtrac{n}{client}\PYGtrac{o}{.}\PYGtrac{n+na}{target}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}http://resteasy.com/books\PYGtracZdq{}}\PYGtrac{o}{);}
+
+\PYGtrac{n}{Form} \PYGtrac{n}{form} \PYGtrac{o}{=} \PYGtrac{k}{new} \PYGtrac{n}{Form}\PYGtrac{o}{().}\PYGtrac{n+na}{param}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}author\PYGtracZdq{}}\PYGtrac{o}{,} \PYGtrac{l+s}{\PYGtracZdq{}Claus Ibsen\PYGtracZdq{}}\PYGtrac{o}{)}
+\PYGtrac{o}{.}\PYGtrac{n+na}{param}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}name\PYGtracZdq{}}\PYGtrac{o}{,}\PYGtrac{l+s}{\PYGtracZdq{}Camel in Action\PYGtracZdq{}}\PYGtrac{o}{);}
+
+\PYGtrac{n}{Response} \PYGtrac{n}{response} \PYGtrac{o}{=} \PYGtrac{n}{target}\PYGtrac{o}{.}\PYGtrac{n+na}{request}\PYGtrac{o}{().}\PYGtrac{n+na}{post}\PYGtrac{o}{(}\PYGtrac{n}{Entity}\PYGtrac{o}{.}\PYGtrac{n+na}{form}\PYGtrac{o}{(}\PYGtrac{n}{form}\PYGtrac{o}{));}
+\PYGtrac{n}{Order} \PYGtrac{n}{order} \PYGtrac{o}{=} \PYGtrac{n}{response}\PYGtrac{o}{.}\PYGtrac{n+na}{readEntity}\PYGtrac{o}{(}\PYGtrac{n}{Order}\PYGtrac{o}{.}\PYGtrac{n+na}{class}\PYGtrac{o}{);}
+
+\PYGtrac{c+c1}{// direct get of Java object}
+\PYGtrac{n}{Car} \PYGtrac{n}{car} \PYGtrac{o}{=} \PYGtrac{n}{client}\PYGtrac{o}{.}\PYGtrac{n+na}{target}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}http://resteasy.com/cars\PYGtracZdq{}}\PYGtrac{o}{).}
+\PYGtrac{n}{queryParam}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}brand\PYGtracZdq{}}\PYGtrac{o}{,} \PYGtrac{l+s}{\PYGtracZdq{}Ferrari\PYGtracZdq{}}\PYGtrac{o}{).}\PYGtrac{n+na}{request}\PYGtrac{o}{().}\PYGtrac{n+na}{get}\PYGtrac{o}{(}\PYGtrac{n}{Car}\PYGtrac{o}{.}\PYGtrac{n+na}{class}\PYGtrac{o}{);}
+\end{Verbatim}

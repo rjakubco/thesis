@@ -450,8 +450,8 @@ Next mentioned principle of RESTful web service is its statelessness, but that m
 
 The last principle of RESTful web service is HATEOS where the main idea is using Hypermedia As The Engine of Application State (HATEOAS). This approach is very useful because hypermedia have added support for embedding links to other services or information within document format. One of the uses is for example aggregating complex sets of information from different sources and using hyperlinks in document to reference additional information without bloating responses. But the "engine" part is much more useful because it is different approach from traditional and older distributed applications that have list of services they know exist. These applications then call central server for location of these services. Instead RESTful web services with HATEOAS with each response returned from a server define new possible interactions that can be done next, as well transition state of application.
 
-\section{JBoss RESTEasy}
-JBoss RESTEasy is project providing frameworks for building RESTful Web Services and RESTful Java applications. This means that it is a fully certified and portable implementation of the JAX-RS specification which can run in any servlet container. It is also no surprise that it is fully integrated with JBoss Application Server to make better experience in that environment. To understand better what exactly is JBoss RESTEasy, it is required to understand what exactly is JAX-RS.\cite{resteasy-doc}
+\section{RESTEasy}
+RESTEasy is project providing frameworks for building RESTful Web Services and RESTful Java applications. This means that it is a fully certified and portable implementation of the JAX-RS specification which can run in any servlet container. It is also no surprise that it is fully integrated with JBoss Application Server to make better experience in that environment. To understand better what exactly is RESTEasy, it is required to understand what exactly is JAX-RS.\cite{resteasy-doc}
 
  
 \subsection{JAX-RS 1.0 and 1.1}
@@ -553,18 +553,108 @@ Another thing to consider is tight connection between RESTEasy and products like
 
 %
 \chapter{Analysis and Design}
-%\section{Requirements}
-%\subsection{Camel consumer}
-%\subsection{Camel producer}
-%\section{Diagrams}
-%\subsection{Data flow diagram}
-%\subsection{Class diagram}
-%\section{Design restrictions}
-%
-%\chapter{Implementation}
-%\section{ssss}
-%
-%\chapter{Conclusion}
+This chapter describes software analysis of new Camel component, and it is taking into the account facts written in previous chapter. Given that the development of new Camel component is pretty restricted and it must follow base skeleton given by the framework, not every part of software analysis is needed. The most useful part of software analysis in this scenario are data flow diagrams (DFD). But the first thing to do, is to identify base requirements for the new component, so the analysis starts with identifying these requirements. Next section then shows data flow diagram (DFD) that illustrate message flow in Camel. This should also help to understand how will the new component work. Last part of this chapter is description of design decisions made on facts provided in this chapter. 
+
+\section{Requirements}
+The purpose of the thesis is to integrate RESTEasy project with Apache Camel framework as it is defined in assignment. That means creation of new Camel component that will be exposing REST interface endpoints in Camel, so basically a consumer. Because it should be integrated with RESTEasy project, the exposed endpoints should be configured via JAX-RS annotations provided by RESTEasy. As mentioned previously, the newest version of RESTEasy is also fully certified implementation of JAX-RS 2.0 specification which means it also provides client API that should be use as Camel producer. This component is required by community for some time and the requirement is logged in  
+the Apache's Jira\footnote{\url{https://issues.apache.org/jira/browse/CAMEL-2983}}.
+
+The assignment is only basic description of Camel component so there any really detailed listing of requirements and special features for this component. Therefore more detailed list of requirements and in some cases even restrictions was composed after analysis of RESTEasy project. Also some inspiration came after analysis of similar components providing REST endpoints. This is quick overview of defined requirements and default features for both consumer and producer.
+
+\subsection{Consumer}
+\begin{itemize}
+\item
+ability to create consumer connected with defined REST web service by RESTEasy (basic consumer)
+
+\item
+ability to create consumer defined in the route (camel proxy consumer)
+
+\item
+ability to define REST web service as interface with RESTEasy annotations with Consumer in the route and creating Response via route (proxy consumer)
+
+\item
+define allowed request methods for consumer defined only in the route
+
+
+\item
+ability to change Response returned from REST web service in the route, before it is send to the client 
+
+\item
+both request and response should be routed into the route
+
+\item
+DSL and Spring support
+
+
+\end{itemize}
+
+\subsection{Producer}
+\begin{itemize}
+\item
+send HTTP request to defined target using RESTEasy Client API
+
+\item
+provide possibility for basic authentication with URI options
+
+\item
+ability to use RESTEasy Proxy Framework Client API (more detail will be given in chapter \ref{})
+
+\item
+DSL and Spring support
+\end{itemize}
+
+\section{Camel's data flow}
+This section contains two DFDs illustrating data flow incoming into Consumer and outgoing from Producer. 
+
+As defined in previous section, the new component provides three types of Consumer. Each of them has little bit different data flow, so to better understand them, there are three diagrams. The first diagram shown on the figure \ref{}, shows basic Consumer data (message) flow, where RESTEasy process HTTP request and create response according to implementation of service without sending it to the client. Afterwards, the response is send to Camel route as Exchange for another processing. HTTP request is also bundled into the Exchange in a special header. When the processing  is done, the final Response is returned to the client. 
+
+The second diagram shown on the figure \ref{}, depicts data flow of the second type of consumer. This is a consumer, which is internally called Camel Proxy Consumer in this thesis. This type of Consumer is defined only in the route, that is exposing it as web service. The request should be processed in the route along with creation of response for the client. This consumer is really only bonus feature, that can be used for creation really simple web service without need to create class with JAX-RS annotations. More detail will be provided in section \ref{}.
+
+Next diagram shown on figure \ref{}, illustrates the last possible Consumer in the new component, which is internally called Proxy Consumer. In this type of Consumer, users only have to define interface with desired methods annotated with JAX-RS annotations. In this type, RESTEasy will take care of processing and matching HTTP request, which is afterwards send for processing as Exchange into the route and response should be created in the route.  
+
+
+The final diagram shown on figure \ref{}, depicts message flow in a Producer. Producer message flow is reverse to Consumer message flow. It process Exchange from the route and send the HTTP request to the target. 
+
+
+\chapter{Implementation}
+As stated before, the goal of this thesis is to integrate Apache Camel and RESTEasy to create a new Camel Resteasy component. This chapter describes source code and implementation of Camel Resteasy component. 
+
+The implementation was done in Java programming language, similar to Camel core and other components. It was also implemented with regards to restrictions set by Camel framework for components mentioned in previous chapters. Version that were use in the source code:
+\begin{itemize}
+\item
+Java 1.7
+
+\item
+Apache Camel 2.14.0
+
+\item
+RESTEasy 3.10.0
+\end{itemize}
+
+\section{Class diagram}
+The final fully exported class diagram for the Camel Resteasy component can be found in appendix \ref{}. Sections describing single classes of the component will use only single class diagrams.
+
+\section{ResteasyComponent class}
+
+\section{ResteasyEndpoint class}
+
+\section{Consumer}
+
+\subsection{ResteasyConsumer class}
+\subsection{Resteasy servlet class}
+\subsection{Resteasy filters}
+\subsection{HttpRegistry class}
+
+\section{Producer}
+\subsection{ResteasyProducer class}
+\subsection{ResteasyHttpBinding class}
+\section{ResteasyHeaderFilterStrategy}
+\section{ResteasyConstants class}
+\section{Unit tests}
+\section{Examples of usage}
+
+\chapter{Conclusion}
+
 
 
 
@@ -635,6 +725,10 @@ Another thing to consider is tight connection between RESTEasy and products like
 \appendix
 
 \chapter{Appendix}
+
+\section{Contents of included CD}
+\newpage
+\section{Examples}
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/future.java}
 	\caption{Future example}
@@ -652,6 +746,8 @@ Another thing to consider is tight connection between RESTEasy and products like
 	\caption{Asynchronous server-side}
 	\label{async-server}
 \end{listing}
-
+\newpage
+\section{Class Diagram}
+bla
 %% End of the whole document
 \end{document}

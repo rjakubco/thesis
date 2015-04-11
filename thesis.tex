@@ -88,12 +88,20 @@
 
 %% Thanks (optional)
 \begin{ThesisThanks}
- 
+I would like to thank to my supervisors RNDr. Adam Rambousek and Mgr. Marek Grác, Ph.D
+for providing constant feedback during the preparation of this master’s
+thesis. Many thanks goes to all my colleagues and friends from Red Hat that
+expressed their valuable thoughts and helped to make this thesis better.
+
+I would also like to thank to my parents and sister for standing behind me the whole time and bear with me and my personality.
 \end{ThesisThanks}
 
 %% Abstract (required)
 \begin{ThesisAbstract}
-
+The purpose of this master’s thesis is to design and develop new Camel
+component by integrating two open-source project Apache Camel and
+RESTEasy. This new component will act as RESTful web service in
+the Camel integration framework.
 \end{ThesisAbstract}
 
 %% Keywords (required)
@@ -111,6 +119,26 @@ Apache Camel, RESTEasy, JAX-RS, REST, RESTful, integration framework, component,
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
 \chapter{Introduction}
+The age we are living right now is also called Information Age, given that we can't even imagine our lives without modern technologies. They really makes our lives much more easier and the most important part is that they are providing us with crucial information. New technologies arise almost every day, given that IT segment is much more faster, innovative and agile than other segments. Creating a new systems from scratch is very costly and almost never successful. So much more effective and better alternative is to assemble new systems from existing and proven components. There are various information systems and technologies based on various programming languages containing a lot of information. So it is no surprise that there is a need for connecting these systems together and benefit from their already running code to provide business logic. It sounds really nice and simple, but the differences in technologies and programming languages create a real problem in integration of systems. Also not every system is ready to be connected to others systems, because it doesn't provide the right interface. These are the problems that integration frameworks are trying to solve.
+
+Integration frameworks are trying to enable interoperability across platforms, data formats, programming languages and different interfaces and make it simple as much as possible. Integration is hard and difficult, so frameworks are trying to find a way to make simple and bring some real benefits for the user when using them rather than intimidate them with hard learning process.
+
+One of the more known integration frameworks is Apache Camel project\cite{camel-web}. Its main benefits are that it is open source, developed under Apache with strong and helping community. Camel was design to keep up with new emerging technologies by creating modular project. The core is lightweight and stable and it is providing necessary tools for every integration scenario. New communication protocols are added to the Camel as new components.
+
+The main purpose of this thesis is to create a new Camel component. This component should integrate RESTEasy project\footnote{\url{http://resteasy.jboss.org/}} into the Camel. RESTEasy is open source project that provides various frameworks for building RESTful Web Services and RESTful Java applications. This component was required though community process as a new feature. There are of course other components already providing RESTful services in Camel distribution, so it may not be clear why there is a need for another similar component. RESTEasy is really popular RESTful implementation in JBoss community. It is also primarily used in WildFly application server in which can be this new component very useful.
+
+Camel's community has a specified rule for naming the new component, so to follow this rule the component developed in this thesis is named Camel Resteasy.
+
+Quick overview of thesis is as follows. It is divided into five thematic parts. The first chapter
+contains introduction, motivation and purpose of the thesis.
+
+The second chapter introduces all the technologies used in the implementation. The text tries to provide the most important facts and information about described technologies with links to more detailed sources for further reading.
+
+The third chapter describes analysis and design. It contains diagrams to better illustrate how the new component works inside of Camel.
+
+The next chapter describes implementation of the new component created for this thesis. It provides basic description of classes and their purpose. It also explains some specific problems and features of developed component.
+
+The last chapter is conclusion of the work.
 
 
 \chapter{Technologies}
@@ -480,7 +508,7 @@ Filters and interceptors
 
 This subsection provides basic overview of mentioned features. Of course there are other minor features and upgrades to make the framework more useful and stable.
 
-\subsection*{Client API}
+\subsection*{Client API}\label{client-api}
 Both previous versions of JAX-RS were missing client API, as it was stated previously. Because of this missing feature, each implementation of JAX-RS created their own client API, which is not so great for standardized framework. So version 2.0 contains fluent, low-level, request building API that can be seen on example \ref{rest-client}. 
 
 \begin{listing}[ht]
@@ -661,7 +689,7 @@ List of URI parameters for Resteasy endpoint:
 servletName -- specifies the servlet name that the endpoint will bind to. This name should match the name of the servlet, that maintains the REST services and it is defined in web.xml. This option is for consumer only and it is required option. 
 
 \item
-resteasyMethod -- use to define, which HTTP method should be used in HTTP client. This option is for producer only.
+resteasyMethod -- use to define, which HTTP method should be used in HTTP client. This option is for producer only. This option can also be specified in CamelResteasyHttpMethod header, which also overrides URI option.
 
 \item
 restEasyHttpBinding
@@ -735,14 +763,32 @@ The Resteasy component also provide default implementation of this interfaces, D
 
 
 \section{ResteasyProducer class}
+ResteasyProducer represents client part and is implemented using Client API provided by RESTEasy. It extends DefaultProducer and it is overriding process() method. There are also few methods there primarily used as a helping methods, for creating the right URI, adding query or getting producer configuration options specified URI in endpoint. Main task of producer is getting data from Exchange and send HTTP request to the specified target in endpoint and this is the task of process() method. 
+
+RESTEasy implementation of Client API has one bonus feature compared to JAX-RS Client API. Of course it is providing the same basic HTTP client mentioned in chapter \ref{client-api}. The additional feature is RESTEasy Proxy Framework\footnote{\url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html\#d4e2143}}. It is the mirror opposite of JAX-RS server-side specification, meaning the client framework builds a HTTP request that it uses to invoke on a remote RESTful web service, which also doesn't have to JAX-RS service but can be any web resource accepting HTTP requests. To use this client, user must create Java interface with JAX-RS annotations on methods and then use Client API capable invoking proxy methods on specified interface\cite{resteasy-doc}. More detail about this feature can be found in RESTEasy documentation. 
+
+To use this feature in component, user must specify the created interface with fully quantified name in URI option \textit{proxyClientClass} and provide, which method of the interface should be invoked in URI option \textit{proxyMethod}. In reality process() method doesn't have any Client logic implementation in it. Its task is to just select which type of client will be executed depending on provided configuration of endpoint. The real implementation logic of transforming Messages to HTTP requests and HTTP response to Messages is done in implementation of ResteasyHttpBinding interface. In it is also implemented creation of client request and its execution.
+
+
 \section{ResteasyHttpBinding class}
-\section{ResteasyHeaderFilterStrategy}
-\section{ResteasyConstants class}
+As already mentioned the ResteasyHttpBinding interface and its implementation DefaultResteasyHttpBinding are responsible for conversion of Messages to HTTP requests and HTTP responses to Messages. It is used only in Producer class. 
+
+These classes contains only 4 methods, where one is just a setter. There is method for populating Exchange from HTTP response and two methods for populating HTTP request from Exchange, depending if the basic client is used or the proxy one. Important aspect of transformation between Exchanges and HTTP requests and responses, is that all headers are extracted and stored between these objects. This is done in both ways of the transformation. Headers are also all filtered by given strategy. The component provides default strategy for filtration named ResteasyHeaderFilterStrategy, but users also can create their own strategy and set on the endpoint as URI option.
+
+There is also a possibility to create own implementation of ResteasyHttpBinding and set it in the component instead the default one provided by the component. This gives user more flexibility if there is some special task that needs to be done and default implementation can't handle it correctly.  
+
 \section{Unit tests}
+As already mentioned, RESTEasy can only run in container, where the \textit{.war} application is deployed and servlet is created. This is most crucial for consumer part of the component, so for testing purposes the component was integrated with Arquillian test framework\footnote{\url{http://arquillian.org/}} to use embedded WildFly 8.2 server in tests. Where each test class starts its own WildFly server and deploys created bundle containing the new component and Camel routes.  
+
+Some units test also leverage CamelTestSupport class, that provides lot of useful methods for testing Camel components. This is mostly done in Producer tests in which Arquillian is integrated CamelTestSupport. Tests also provide example different definitions of Camel routes in XML or in Java language.
+
+Camel has convention for structure of unit tests in which every test class represents scenario and has descriptive self-explaining name. This is done to be much more understandable and clear for outside user. 
+
 \section{Examples of usage}
+???
 
 \chapter{Conclusion}
-
+The main task of this master's thesis was integration of RESTEasy project with Apache Camel project. This means design and developing new Camel component that should be used for integration of RESTful web service and Camel framework. 
 
 
 
@@ -767,9 +813,19 @@ The Resteasy component also provide default implementation of this interfaces, D
 \bibliography{references}
 
 \begin{thebibliography}{}
+
+
 \bibitem{eip} HOHPE, Gregor and WOLF, Bobby. \textit{Enterprise integration patterns}. Boston: Addison-Wesley, c2003, ISBN 978-0321200686.
 
 \bibitem{camel-in-action} IBSEN, Claus and ANSTEY,Jonathan. \textit{Camel in Action}. Greenwich, Conn.: Manning, c2011, ISBN 19-351-8236-6.
+
+\bibitem{resteasy-book} BURKE, Bill. \textit{RESTful Java with JAX-RS 2.0}. Sebastopol: O'Reilly Media, c2013, ISBN 978-1-449-36134-1
+
+\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
+
+\bibitem{rest-arch} FIELDING, Roy Thomas. \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine, 2000. 
+
+\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
 
 \bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
 
@@ -777,9 +833,8 @@ The Resteasy component also provide default implementation of this interfaces, D
 
 \bibitem{camel-comp} http://camel.apache.org/creating-a-new-camel-component.html
 
-\bibitem{resteasy-book} BURKE, Bill. \textit{RESTful Java with JAX-RS 2.0}. Sebastopol: O'Reilly Media, c2013, ISBN 978-1-449-36134-1
 
-\bibitem{rest-arch} FIELDING, Roy Thomas. \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine, 2000. 
+
 
 \bibitem{jax-1.1} http://www.javaworld.com/article/2073264/jax-rs-1-1--what-s-new-.html
 \bibitem{jax-1.1-2} http://www.infoq.com/news/2010/02/javaee6-rest
@@ -788,7 +843,7 @@ The Resteasy component also provide default implementation of this interfaces, D
 
 \bibitem{jax-wiki} \url{http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services}
 
-\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
+
 
 \bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}		
 
@@ -799,7 +854,7 @@ The Resteasy component also provide default implementation of this interfaces, D
 \bibitem{cxf-jax} http://cxf.apache.org/docs/jax-rs-basics.html\#JAX-RSBasics-WhatisNewinJAX-RS2.0
 
 %
-\bibitem{camel-cookbook} CRANTON, Scott and KORAB, Jakub. \textit{Apache Camel Developer's Cookbook}.  Birmingham: Packt publishing, c2013, ISBN 9781782170303.
+
 %
 %\bibitem{dzone} DZONE RESEARCH. \textit{Guide to Enterprise Integration} [online]. 2014- [cite 2014-12-14]. Available at: \url{http://www.dzone.com/research/guide-to-enterprise-integration}
 %

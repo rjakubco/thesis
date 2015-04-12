@@ -119,11 +119,11 @@ Apache Camel, RESTEasy, JAX-RS, REST, RESTful, integration framework, component,
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
 \chapter{Introduction}
-The age we are living right now is also called Information Age, given that we can't even imagine our lives without modern technologies. They really makes our lives much more easier and the most important part is that they are providing us with crucial information. New technologies arise almost every day, given that IT segment is much more faster, innovative and agile than other segments. Creating a new systems from scratch is very costly and almost never successful. So much more effective and better alternative is to assemble new systems from existing and proven components. There are various information systems and technologies based on various programming languages containing a lot of information. So it is no surprise that there is a need for connecting these systems together and benefit from their already running code to provide business logic. It sounds really nice and simple, but the differences in technologies and programming languages create a real problem in integration of systems. Also not every system is ready to be connected to others systems, because it doesn't provide the right interface. These are the problems that integration frameworks are trying to solve.
+The age we are living right now is also called Information Age, given that we can't even imagine our lives without modern technologies. They really makes our lives much more easier and the most important part is that they are providing us with crucial information. New technologies arise almost every day as IT segment is much more faster, innovative and agile than other segments. Creating new systems from scratch is very costly and almost never successful. More effective and better alternative is to assemble new systems from existing and proven components. There are various information systems and technologies based on various programming languages containing a lot of information. So it is no surprise that, there is a need for connecting these systems together and benefit from their already running code to provide business logic. It sounds really nice and simple, but the differences in technologies and programming languages create a real problem in integration between these systems. Also not every system is ready to be connected to others systems, because it doesn't provide the right interface. These are the problems that integration frameworks are trying to solve.
 
-Integration frameworks are trying to enable interoperability across platforms, data formats, programming languages and different interfaces and make it simple as much as possible. Integration is hard and difficult, so frameworks are trying to find a way to make simple and bring some real benefits for the user when using them rather than intimidate them with hard learning process.
+Integration frameworks are trying to enable interoperability across platforms, data formats, programming languages, different interfaces and make it simple as much as possible. Integration is hard and difficult, so frameworks are trying to find a way to make it straightforward and bring some real benefits for users when using them rather than intimidate them with hard learning process.
 
-One of the more known integration frameworks is Apache Camel project\cite{camel-web}. Its main benefits are that it is open source, developed under Apache with strong and helping community. Camel was design to keep up with new emerging technologies by creating modular project. The core is lightweight and stable and it is providing necessary tools for every integration scenario. New communication protocols are added to the Camel as new components.
+One of the more well-known integration frameworks is Apache Camel project\cite{camel-web}. Its main benefits are that it is open source project, developed under Apache with strong and helping community. Camel was design to keep up with new emerging technologies by creating modular project. The core is lightweight and stable. The framework is also providing necessary tools for every integration scenario. One of the features of Camel  based on its modularity is that, new communication protocols are added to the Camel as new components. This helps with keeping core lightweight. 
 
 The main purpose of this thesis is to create a new Camel component. This component should integrate RESTEasy project\footnote{\url{http://resteasy.jboss.org/}} into the Camel. RESTEasy is open source project that provides various frameworks for building RESTful Web Services and RESTful Java applications. This component was required though community process as a new feature. There are of course other components already providing RESTful services in Camel distribution, so it may not be clear why there is a need for another similar component. RESTEasy is really popular RESTful implementation in JBoss community. It is also primarily used in WildFly application server in which can be this new component very useful.
 
@@ -141,7 +141,7 @@ The next chapter describes implementation of the new component created for this 
 The last chapter is conclusion of the work.
 
 
-\chapter{Technologies}
+\chapter{Technologies}\label{tech}
 This chapter describes technologies that are used for implementation of Camel RESTEasy  component. Each subsection introduces the technology and tries to explain what is its main functionality and common usage.
 
 \section{Apache Camel}
@@ -149,25 +149,26 @@ Apache Camel is a open source rule-based routing and mediation framework impleme
 
 Its main focus is on integration and interaction between various applications or systems for which Camel can provide standalone routing, transformation, monitoring and many other things. From this point of view Camel may seems like ESB\footnote{ESB - Enterprise Service Bus}, but this is not the case, because Camel doesn't provide a container support or reliable message bus, but it can be deployed into one and create full integration platforms(also know as ESB) like Apache ServiceMix\footnote{\url{http://servicemix.apache.org/}}, JBoss Fuse\footnote{\url{http://www.jboss.org/products/fuse/overview/}} and JBoss Fuse Service Works. 
 
-Camel also has extensible and modular architecture that allows implementation and seamlessly plug in support for new protocols and this architectural design makes Camel lightweight, fast and easy extendable for developers.\cite{camel-in-action}
+Camel also has extensible and modular architecture that allows implementation and seamlessly plug in support for new protocols. This architectural design makes Camel lightweight, fast and easy extendable for developers.\cite{camel-in-action}
 
-\subsection{The core principles/features of Camel}
-Camel is using convention over configuration approach to describe given task by domain-specific language (DSL) in declarative way. This way Camel minimize number of lines of the source code that is needed for implementation of integration scenarios. Another key feature that helps with this task is usage of theory of EIPs, which are already integrated in DSL and also getting the most from their potential. 
+\subsection{The core features}
+Camel is using convention over configuration approach to describe given task by domain-specific language (DSL) in declarative way. This way Camel minimize number of lines of the source code that are needed for implementation of integration scenarios. Another key feature helping with this task is usage of theory of EIPs, which are already integrated in DSL and getting the most from their potential. 
 
-Another fundamental principle of Camel is that it makes no assumptions about the data format. This feature is important because it makes possible for developers to integrate  systems together without any need to convert data to some canonical format. This way there are no limitations for integration of any kind of systems together\cite{camel-in-action}.
+Another fundamental principle of Camel is that it makes no assumptions about the data format. This feature is important because it makes possible for developers to integrate systems together, without any need to convert data to some canonical format. This way there are no limitations for integrating together any kind of systems\cite{camel-in-action}.
 
 \subsection*{Routing and mediation engine}
-One of the core features of Camel is its routing and mediation engine. A routing engine selectively moves a data from one destination to another based on the route’s configuration. Users also can define their own rules for routing, add processors to modify the data, filter them based on some predicate and at the end decide the final destination for the delivery.
+One of the core features of Camel is its routing and mediation engine. A routing engine selectively moves a data from one destination to another based on the route's configuration. Users also can define their own rules for routing, add processors to modify the data, filter them based on some predicate and at the end decide the final destination for the delivery.
 
 \subsection*{Enterprise integration patterns}
-Like it is mentioned before Camel is based primarily on EIPs. EIPs describe integration problems and their solutions and also provide some basic vocabulary but the problem is this vocabulary isn't formalized. And into this comes Camel with its language which describes the integration solutions and tries to formalized the vocabulary. There's almost a one-to-one relationship between the patterns described in
+As mentioned before, Camel is based primarily on EIPs. EIPs describe integration problems and their solutions. They also provide some basic vocabulary, but the problem is the vocabulary isn't formalized. Into this comes Camel with its language which describes integration solutions and tries to formalized the vocabulary. There's almost a one-to-one relationship between patterns described in
 Enterprise Integration Patterns and the Camel DSL\footnote{\url{http://camel.apache.org/enterprise-integration-patterns.html}}.
-Almost all of the EIPs that are defined in the book are implemented as Processors or sets of Processors in the Camel. Processors are used for manipulation of messages between destinations specified in the Camel route.\cite{camel-dzone}
+
+Almost all of EIPs, that are defined in the book, are implemented as Processors or sets of Processors in the Camel. Processors are used for manipulation of messages between destinations specified in the Camel route.\cite{camel-dzone}
 
 
 
 \subsection*{Domain-specific language}
-There are few other integration frameworks with DSL and also some have support for describing route rules in XML, but bonus that comes with Camel is its the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there is also possibility to describe the route in XML document. 
+There are few other integration frameworks with DSL and also some have support for describing route rules in XML. But bonus that comes with using Camel is its the support for specifying DSLs in regular programming languages as Java, Groovy, Ruby and even Scala. Of course there is also a possibility to describe the route in a XML document. 
 
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/java_dsl_example.java}
@@ -189,13 +190,13 @@ There are few other integration frameworks with DSL and also some have support f
 
 
 \subsection*{Modular and pluggable architecture}
-The next feature is the approach to the architecture, which is done in modular way. This means, that Camel can be easily extended to consume data from endpoint and produce data to endpoint. Camel is describing this as developing a new component, where each component is responsible for consuming or producing data for some specific endpoint and technology e.g. file, HTTP and many others. When developers want to develop a new component for some unique system and add its functionality to the Camel, they just need to follow structure specified by the framework and extend core classes. 
+The next feature is the approach to the architecture, which is done in modular way. This means that Camel can be easily extended to consume data from a endpoint and produce data to some other endpoint. Camel is describing this as developing a new component, where each component is responsible for consuming or producing data for some specific endpoint and technology e.g. \texttt{file}, \texttt{HTTP} and many others. When developers want to develop a new component for some unique system and add its functionality to the Camel, they just need to follow structure specified by the framework and extend core classes. 
 
-By default Camel ships with the few most basic components called camel-core. This bundle includes 24 components including components like bean, file, log, seda and mock. Plus there are many more components developed by the Apache community and also third-parties\footnote{\url{http://camel.apache.org/components.html}}. There are already developed components that can be used for the most common integration scenarios that occur in systems. Some components worthy of note are web services including SOAP\footnote{SOAP} or REST\footnote{REST}, JMS\footnote{JMS}, specialized JMS component for Apache ActiveMQ\footnote{\url{http://camel.apache.org/activemq.html}} or components for different database connections.
+By default Camel ships with the few most basic components called \textit{camel-core}. This bundle includes 24 components including components like \texttt{bean}, \texttt{file}, \texttt{log}, \texttt{seda} and \texttt{mock}. Plus there are many more components developed by the Apache community and also third-parties\footnote{\url{http://camel.apache.org/components.html}}. There are already developed components that can be used for the most common integration scenarios that occur in systems. Some components worthy of note are web services including SOAP\footnote{SOAP -- Simple Object Access Protocol}, REST\footnote{REST -- Representational State Transfer}, JMS\footnote{JMS -- Java Message Service}, specialized JMS component for Apache ActiveMQ\footnote{\url{http://camel.apache.org/activemq.html}} or components for different database connections.
 
 
 \subsection*{Configuration}
-As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so that developers don't need to learn complicated configuration options and focus on more important things. This is reflected on configuration of endpoints in route definitions with URI\footnote{Uniform Resource Identifier} options as can be seen on example \ref{uri-option}.
+As mentioned before Camel uses convention over configuration paradigm to minimize configuration requirements so developers don't need to learn complicated configuration options and can focus on more important things. This is reflected on configuration of endpoints in route definitions with URI\footnote{URI -- Uniform Resource Identifier} options as can be seen on example \ref{uri-option}.
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/uri.java}
 	\caption{URI options configurations}
@@ -203,7 +204,7 @@ As mentioned before Camel uses convention over configuration paradigm to minimiz
 \end{listing}
 
 \subsection*{Type converters}
-Another feature of Camel which is one of the top features for Camel Community and that are build-in automatic converters. Out of the box Camel ships with more than hundred and fifty converters\cite{camel-in-action}. Plus if there is no converter for your types, there is possibility to create new custom converters for your specific types. Usage of the converter can be seen on example \ref{converter} and the example also demonstrates how is the converter used by Camel without user's knowledge in \textit{getBody} method and its parameter.
+Next feature of Camel, which is one of the top features for Camel Community, are build-in automatic converters. Out of the box Camel ships with more than hundred and fifty converters\cite{camel-in-action}. Plus if there is no converter for your type, there is possibility to create new custom converters for your specific types. Usage of the converter can be seen on example \ref{converter}. The example also demonstrates use of the converter by Camel without user's knowledge in \textit{getBody()} method and its parameter.
 
 \begin{listing}[ht, p!]
 	\inputminted[]{java}{sources/converter.java}
@@ -213,10 +214,10 @@ Another feature of Camel which is one of the top features for Camel Community an
 
 
 \subsection*{Lightweight framework}
-From the start the whole framework was designed to be undemanding and lightweight as possible. The core library has only about 1.6 MB and third parties dependencies are kept at minimum. This way Camel can be easily embedded into any platform, which can be e.g. OSGi\footnote{OSGi} bundle, Spring application, Java EE application or web application. 
+From the start the whole framework was designed to be undemanding and lightweight as possible. The core library has only about 1.6 MB and third parties dependencies are kept at minimum. This way Camel can be easily embedded into any platform which can be e.g. OSGi\footnote{\url{http://www.osgi.org/Main/HomePage}} bundle, Spring application, Java EE application or web application. 
 
 \subsection{Message model}
-Until now we talk about sending data from one endpoint to another. That is exactly what is Camel doing but in reality it is sending and receiving messages which encapsulate the data. There two abstractions classes that are use for modelling messages in Camel and these are:
+Until now we talk about sending data from one endpoint to another. That is exactly what is Camel doing but in reality it is sending and receiving messages which encapsulate the data. There two abstraction classes that are use for modelling messages in Camel and these are:
 \begin{itemize}
 \item
 \texttt{org.apache.camel.Message} -- the basic entity containing data that is routed in the Camel 
@@ -227,32 +228,32 @@ Until now we talk about sending data from one endpoint to another. That is exact
 \end{itemize} 
 
 \subsection*{Message}
-Message object is representing data that is used by systems to communicate with each other. Messages are sent in one direction from a sender to a receiver. The message object consists of body, headers and optional attachments. All messages must be uniquely identified with an unique identifier(UID). The format of UID is not guaranteed and it is dependent on the used protocol. If the protocol doesn't have UID scheme, then generic generator from the framework is used.
+The \texttt{Message} object is representing data that are used by systems to communicate with each other. \texttt{Messages} are sent in one direction from a sender to a receiver. The \texttt{Message} object consists of body, headers and optional attachments. All messages must be uniquely identified with an unique identifier(UID). The format of UID is not guaranteed and it is dependent on the used protocol. If the protocol doesn't have UID scheme, then generic generator from the framework is used.
 
-Headers are name-value pairs associated with the message, similar to HTTP protocol. They provide additional information about the message such as sender identifiers, encoding, content type or authentication parameters. They are stored in a map within the message and each name of the header is unique case insensitive string and the value can be any Java object.
+Headers are name-value pairs associated with the \texttt{Message}, similar to HTTP protocol. They provide additional information about the \texttt{Message} such as sender identifiers, encoding, content type or authentication parameters. They are stored in a map within the \texttt{Message} and each name of the header is unique case-insensitive string and the value can be any Java object.
 
-Body is representing content of the message and its type is generic Java Object, so message can store any kind or type of content. The sender should send body type acceptable by the receiver. If this is not the case then manual transformation inside the route is needed or more conveniently type converters are automatically used by the Camel.
+Body is representing content of the \texttt{Message} and its type is generic Java Object, so \texttt{Message} can store any kind or type of content. The sender should send body type acceptable by the receiver. If this is not the case then manual transformation inside the route is needed or more conveniently type converters are automatically used by the Camel.
 
 
 \subsection*{Exchange}
-An \textit{Exchange} is defined as message's container encapsulating the \textit{Message} used during routing. There are various types of interactions between systems and they are supported by the \textit{Exchange}. These interactions are called message exchange patterns (MEPs) and they are used to specify messaging styles in the property of the  \textit{Exchange}. This property has to two different messaging styles where one is one-way and the other one is request-response. 
+An \texttt{Exchange} is defined as message's container encapsulating the \texttt{Message} used during routing. There are various types of interactions between systems and they are supported by the \texttt{Exchange}. These interactions are called message exchange patterns (MEPs) and they are used to specify messaging styles in the property of the  \texttt{Exchange}. This property has to two different messaging styles from which one is one-way and the other one is request-response. 
 
-The request-response or \textit{InOut} called in the Camel, is probably the more well-known style because it is used in HTTP-based transport, where client requests to retrieve a web page and it is waiting for the reply from the server. One-way is defined as \textit{InOnly} and for example is primarily use in JMS, where message is sent to the queue and sender doesn't need any response from the queue. These two types are just the basic ones, but Camel provides few more special cases\footnote{http://tinyurl.com/exchangePattern}.\cite{camel-exchange}
+The request-response pattern or \textit{InOut} pattern called in the Camel, is probably the more well-known style, because it is used in HTTP-based transport, where client requests to retrieve a web resource and it is waiting for the reply from the server. One-way pattern is defined as \textit{InOnly} and for example is primarily use in JMS, where message is sent to the queue and sender doesn't need any response from the queue. These two types are just the basic ones, but Camel provides few more special cases\footnote{http://tinyurl.com/exchangePattern}.\cite{camel-exchange}
 %http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/ExchangePattern.html
 
-The \textit{Exchange} is little bit more complex than the \textit{Message} and it is consisting from\cite{camel-in-action}:
+The \texttt{Exchange} is little bit more complex than the \texttt{Message} object and it is consisting from\cite{camel-in-action}:
 \begin{itemize}
 \item
 Exchange ID -- is unique ID that identifies the exchange and it is also automatically generated by the Camel if ID is not explicitly set.
 
 \item
-MEP -- defines type of messaging style.
+Message exchange pattern (MEP) -- defines type of messaging style.
 
 \item
-Exception -- If an error occurred during routing, then \textit{Exception} is set into this field.
+Exception -- If an error occurred during routing, then exception is set into this field.
 
 \item
-Properties -- various properties of the \textit{Exchange} used by Camel, similar to headers in \textit{Message}, but with difference that the properties last for the duration of entire exchange and contain global information, whereas message header are specific to the \textit{Message}. They can be also edited by developers.
+Properties -- various properties of the \texttt{Exchange} used by Camel, similar to headers in \texttt{Message}. With difference that the properties last for the duration of entire exchange and contain global information, whereas message header are specific to the \texttt{Message}. They can be also edited by developers.
 
 \item
 In message -- mandatory input message containing request message.
@@ -263,7 +264,7 @@ Out message -- optional message containing reply message if the MEP is set to \t
 
 
 \subsection{Camel's architecture}
-This chapter will describe architecture of the Camel from high-level and then take closer look on some specific concepts. The basic architecture of the Camel is shown in the figure \ref{camelContext} and should help with understanding of the runtime of \textit{CamelContext}.
+This chapter will describe architecture of the Camel from high-level and then takes closer look on some specific concepts. The basic architecture of the Camel is shown in the figure \ref{camelContext} and should help with getting better picture of the runtime of \textit{CamelContext}.
 
 \begin{figure}[!h]
 \centering
@@ -273,7 +274,7 @@ This chapter will describe architecture of the Camel from high-level and then ta
 \end{figure}
 
 \subsection*{Camel context}
-From the figure \ref{camelContext} it is clear that CamelContext is somewhat similar to container but more precisely it is Camel's runtime system. This system keeps everything together and provides services during the runtime that are:
+From the figure \ref{camelContext} it is clear that \textit{CamelContext} is somewhat similar to container but more precisely it is Camel's runtime system. This system keeps everything together and provides services during the runtime that are:
 \begin{itemize}
 \item
 Routes -- routes that have been added to the context
@@ -294,29 +295,29 @@ Data formats -- data formats loaded into to the context
 Languages -- Camel supports different languages used in the expressions and these are loaded into the context
 
 \item
-Registry -- registry is used for the look up of beans. JNDI\footnote{JNDI} registry is used by default, but if Camel is deployed into Spring or OSGi container then it uses native registry mechanism specific to these technologies.
+Registry -- registry is used for the look up of beans. JNDI\footnote{JNDI -- Java Naming and Directory Interface} registry is used by default, but if Camel is deployed into Spring or OSGi container then it uses native registry mechanism specific to these technologies.
 
 \end{itemize}
 
 \subsection*{Routing engine and routes}
 The routing engine is the thing that actually moves messages, but is not visible to users. It guarantees correct routing from the sender to the receiver.
 
-Routing engine is using routes for its routing. Routes are the essence of the Camel and are the main and only approach how to specify what should be moved where for the routing engine. This means that the route must hold definition of input source to output target. There many possibilities for definition of the route, but the simplest way is to define route as a chain of processors\cite{camel-in-action}. Similar to Message or Exchange, each route has unique identifier that is used for different operation inside of Camel like monitoring, starting or stopping the route. One of the constraint for the route is restriction for the number of input sources, where each route must have exactly one input source that is tied to input endpoint and there can be one or several output targets.
+The routing engine is using routes for its routing. Routes are the essence of the Camel and are the main and only approach how to specify what should be moved where for the routing engine. This means that the route must hold definition of input source to output target. There many possibilities for definition of the route, but the simplest way is to define route as a chain of processors\cite{camel-in-action}. Similar to \texttt{Message} or \texttt{Exchange}, each route has unique identifier that is used for different operations inside of Camel like monitoring, starting or stopping the route. One of the constraints for the route is restriction for the number of input sources, where each route must have exactly one input source that is tied to input endpoint and there can be one or several output targets.
 
 \subsection*{Processor}
-As mentioned before the simplest route consists from the chain of processors. The processor represents a node responsible for using, creating or modifying content of incoming \textit{Exchange} and also its headers. In the chain of processors, exchanges moves during routing from one processor to a another, in the their order defined in the route. This way a route can be seen as graph with nodes where output from the one node is input of another.
+As mentioned before the simplest route consists from the chain of processors. The processor represents a node responsible for using, creating or modifying content of incoming \texttt{Exchange} and also its headers. In the chain of processors, exchanges moves during routing from one processor to a another in the their order defined in the route. This way a route can be seen as graph with nodes where output from the one node is input of another.
 
 As stated previously, almost all built-in processors or their combinations are implementation of EIPs, but Camel also supports implementation of own custom processors and their easy addition to the route.
 
 \subsection*{Component}
-A components help with modular approach and they are main extension point in Camel. Their main purpose and task is to be a factory of endpoints. As mentioned before developers can create their new components, more information and detail on this topic will be given in subchapter \ref{component-devel}. 
+Components help with modular approach and they are main extension point in Camel. Their main purpose and task is to be a factory of endpoints. As mentioned before developers can create their new components, more information and detail on this topic will be given in subchapter \ref{component-devel}. 
 
 \subsection*{Endpoint}
-An endpoint is a abstraction in the Camel that models the the end of message channel. In other words it represents sender or receiver. Endpoints are configured and referred in route using URIs and Camel also looks up a endpoint during runtime by its defined URI. Format of the URI is show on figure \ref{uri} and it is consisting from three parts: scheme, context path and options. 
+An endpoint is a abstraction in the Camel that models the end of message channel. In other words it represents sender or receiver. Endpoints are configured and referred in route using URIs and Camel also looks up a endpoint during runtime by its defined URI. Format of the URI is show on figure \ref{uri} and it is consisting from three parts: \textit{scheme}, \textit{context path} and \textit{options}. 
 
-The scheme specifies which component should be used. In the figure \ref{uri} is used scheme textit{file} that represents Camel \textit{FileComponent} that creates \textit{FileEndpoint}. The component developed in this thesis uses scheme called \textit{resteasy}. The context path describes the location of specific resource for the endpoint, similar to a web page on the server. The last part of the URI is options that is used for specific configuration of the endpoint.
+The \textit{scheme} specifies which component should be used. In the figure \ref{uri} is used scheme texttt{file} that represents Camel \texttt{FileComponent} that creates \texttt{FileEndpoint}. The component developed in this thesis uses scheme called \textit{resteasy}. The \textit{context path} describes the location of specific resource for the endpoint, similar to a web page on the server. The last part of the URI is \textit{options} that is used for specific configuration of the endpoint.
 
-The last task of endpoint is to be factory for creating producers(sender) and consumers(receiver) that are capable of receiving and sending messages in routes.
+The last task of endpoint is to be factory for creating producers (sender) and consumers (receiver) that are capable of receiving and sending messages in routes.
 
 \begin{figure}
 \centering
@@ -326,40 +327,40 @@ The last task of endpoint is to be factory for creating producers(sender) and co
 \end{figure}
 
 \subsection*{Producer}
-A producer is a entity capable of creating and sending a message to an endpoint. Its main task is creating a exchange and populating it with content compatible with the endpoint specification. For example, \textit{JmsProducer} will map Camel message to JMS message before sending it to JMS destination. The producer developed in this thesis acts as HTTP client sending HTTP requests using client API from RESTEasy.
+A producer is a entity capable of creating and sending a message to an endpoint. Its main task is creating a \texttt{Exchange} and populating it with content compatible with the endpoint specification. For example, \texttt{JmsProducer} will map Camel message to JMS message before sending it to JMS destination. The producer developed in this thesis acts as HTTP client sending HTTP requests using client API from RESTEasy.
 
 
 \subsection*{Consumer} 
-As stated before, every route has just one starting point and that is a consumer. The consumer is something like receiver of messages, where the message is sent and its task is to wrap the message into \textit{exchange}, add headers. Exchanges created by consumer are then send and routed in defined chain of processors.
+As stated before, every route has just one starting point and that is the consumer. The consumer is something like receiver of messages, where the message is sent. Its task is to wrap the message into \texttt{Exchange} and add headers. Exchanges created by consumer are then send and routed in defined chain of processors.
 
 Camel defines two types of consumers: event-driven and polling consumers. The event-driven consumer is probably more famous and known because it is associated with client-server architecture and its communication. In EIPs is this consumer referred also as \textit{asynchronous} receiver and its job is to listen on messaging channel, waiting for the incoming messages.
 
-A polling consumer is working little bit different than event-driven consumer. It is active consumer that goes to defined address in endpoint and fetches messages from it. Similar to event-driven consumer, polling consumer has different name in EIP world and it is commonly called \textit{synchronous} receiver. This means that all received message has to be processed before the consumer polls for another one. Common usage of polling consumer in Camel is scheduled polling consumer that checks and polls messages in defined time interval.
+A polling consumer is working little bit different than event-driven consumer. It is active consumer that goes to defined address in endpoint and fetches messages from it. Similar to event-driven consumer, polling consumer has different name in EIP world and it is commonly called \textit{synchronous} receiver. This means that all received messages have to be processed before the consumer polls for another one. Common usage of polling consumer in Camel is scheduled polling consumer that checks and polls messages in defined time interval.
 
 
  
 \section{Development of the new component}\label{component-devel}
-As already stated, developers can exploit Camel modular architecture and easily extend Camel and add new protocols without necessity to change core of the framework. This is feature is achieved by Camel components and by developing new custom component for new protocol. This section describes some of the fundamental principles associated with creation of the custom Camel component.
+As already stated, developers can exploit Camel modular architecture and easily extend Camel and add new protocols without necessity to change core of the framework. This feature is achieved by Camel components and by developing new custom component for new protocol. This section describes some of the fundamental principles associated with creation of the custom component.
 
 Camel is built using Apache Maven\footnote{\url{https://maven.apache.org/}} so the easiest and fastest way to create a custom component from a scratch is to use Maven archetype\footnote{\url{https://maven.apache.org/guides/introduction/introduction-to-archetypes.html}}. Camel offers several archetypes\footnote{\url{http://camel.apache.org/camel-maven-archetypes.html}} for different tasks and projects. Archetype \textit{camel-archetype-component} is used for creating a maven project, that is a base for developing a new custom component\cite{camel-comp}. 
 
 The created project is fully functional \textit{HelloWorld} demo component containing consumer that generates messages and producer for printing them to the console. Modifying this example is great for creating a custom component. The first thing to do is to decide what name will be use in endpoints for referencing the component. This name must be unique so it doesn't create conflict with other components. List of the existing Camel components can be found on official web pages\footnote{\url{http://camel.apache.org/components.html}}
 
 \subsection{Hierarchy of classes}
-Camel component consists from four main classes that together create component and that is  Component, Endpoint, Producer and Consumer. Of course component can have many more classes  used in the component and its correct functionality, but only these 4 are important for creation of correct component in Camel. As stated before their relationship is that everything starts with Component class, which creates an Endpoint. An endpoint then creates Producers and Consumers.
+Camel component consists from four main classes that together create component and that are \texttt{Component}, \texttt{Endpoint}, \texttt{Producer} and \texttt{Consumer}. Of course component can have many more classes used in the component for its correct functionality, but only these four are important for creation of correct component in Camel. As stated before, their relationship is that everything starts with \texttt{Component} class, which creates an \texttt{Endpoint}. An \texttt{Endpoint} then creates \texttt{Producers} and \texttt{Consumers}.
 
 Once again Camel offers some default classes for each of these classes, that can be extended for easier development and not everything needs to be created from the scratch.
 
 \subsection*{Component class}
-Main job of this class is to be a factory of endpoints. This class needs to implement \textit{Component} interface and primarily implement its \textit{createEndpoint()} method. The easiest way to achieve this is to extend \textit{DefaultComponent} class. Of course there is also possibility to extend other component classes from other components and leverage theirs functionality.
+Main job of this class is to be a factory of endpoints. This class needs to implement \texttt{Component} interface and primarily implement its \texttt{createEndpoint()} method. The easiest way to achieve this is to extend \texttt{DefaultComponent} class. Of course there is also possibility to extend other component classes from other components and leverage theirs functionality.
 
 \subsection*{Endpoint class}
-Main task of endpoints is to be factory for Consumers and Producers. Endpoint class needs to implement Endpoint interface that has creation methods for both of them. The simplest way is to extend DefaultEndpoint. Also not all components has to have both Producer and Consumer. It is common that in some components one of them is not needed or doesn't make sense in regards to used technology. This class can also contains all parameters that can be set as URI options on the endpoint. Parameters are usually annotated with @UriParams annotation and set though reflection by Camel.
+Main task of endpoints is to be factory for \textit{Consumers} and \textit{Producers}. The \texttt{Endpoint} class needs to implement \texttt{Endpoint} interface that has creation methods for both of them. The simplest way is to extend \texttt{DefaultEndpoint}. Also not all components have to have both \textit{Producer} and \textit{Consumer}. It is common that in some components one of them is not needed or doesn't make sense in regards to used technology. This class can also contain all parameters that can be set as URI options on the endpoint. Parameters are usually annotated with \texttt{@UriParams} annotation and set though reflection by Camel.
 
 \subsection*{Consumer and Producer class}
-As already stated, Consumer is starting point though which messages enter the route. Camel of course offers some default implementation for event-driven and polling consumers. This class has no major restrictions how should be implemented, it just needs to implement \textit{Consumer} interface with its method \textit{getEndpoint()}. In the component developed in this thesis, \textit{ResteasyConsumer} connects to running web servlet and it is consuming requests and responses from the RESTEasy web service. 
+As already stated, the \textit{Consumer} is starting point though which messages enter the route. Camel of course offers some default implementation for event-driven and polling consumers. This class has no major restrictions how should be implemented, it just needs to implement \texttt{Consumer} interface with its method \texttt{getEndpoint()}. In the component developed in this thesis, \texttt{ResteasyConsumer} connects to running web servlet and it is consuming requests and responses from the RESTEasy web service. 
 
-Producer class is responsible for sending messages outside. Similar to Consumer class there are no given restrictions on the implementation, it just needs to implement \textit{Producer} interface, which extends from the \textit{Processor} interface that has only one method \textit{process()}. But it is recommended to extend \textit{DefaultProducer} class to keep it simple. \textit{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
+The \textit{Producer} is responsible for sending messages outside. Similar to \texttt{Consumer} class there are no given restrictions on the implementation, it just needs to implement \texttt{Producer} interface, which extends from the \texttt{Processor} interface that has only one method \texttt{process()}. But it is recommended to extend \texttt{DefaultProducer} class to keep it simple. \texttt{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
 
 
 \section{REST}
@@ -381,43 +382,43 @@ From answers to these questions, he identifies five specific architecture princi
 
 \begin{itemize}
 \item
-Addressable resources -- resource is REST is abstraction of information and data and it must be addressable via URI.
+Addressable resources -- resource in REST is abstraction of information and data and it must be addressable via URI.
 
 \item
-A uniform, constrained interface -- in your application use only small set of well-defined methods that manipulate with resources.
+A uniform, constrained interface -- applications should use only a small set of well-defined methods that can manipulate resources.
 
 \item
-Representation-oriented -- a resource referenced by one URI can have many different formats, similar to different platforms that need different formats, e.g. HTML\footnote{HyperText Markup Language} for web browsers or JavaScript needs JSON\footnote{JavaScript Object Notation}. REST application should interact with services using representations of that service. 
+Representation-oriented -- a resource referenced by one URI can have many different formats, similar to different platforms that need different formats, e.g. HTML\footnote{HTML -- HyperText Markup Language} for web browsers or JavaScript clients needs JSON\footnote{JSON -- JavaScript Object Notation}. The REST application should interact with a service using representations of that service. 
 
 \item
 Communicate statelessly -- stateless applications can be scale more easily.
 
 \item
-HATEOAS\footnote{Hypermedia as The Engine of Application State} -- data formats should drive state transitions in the application
+HATEOAS\footnote{HATEOS -- Hypermedia as The Engine of Application State} -- data formats should drive state transitions in the application
 
 \end{itemize}
 
 These principles are the reasons, why Web became so successful, enormous and pervasive.\cite{resteasy-book}
 
 \subsection{REST over HTTP}
-REST architecture isn't protocol-specific, but it is usually associated with HTTP protocol. The HTTP protocol is primarily used in browser-based web applications, but these application don't fully leverage all features from it. There are also others web technologies like SOAP\footnote{Simple Object Access protocol} that uses HTTP protocol only for transmission and use only small fraction of its capabilities. Because of this, it may seems like HTTP protocol is not very useful and it has only small set of features. 
+The REST architecture isn't protocol-specific, but it is usually associated with HTTP protocol. The HTTP protocol is primarily used in browser-based web applications, but these applications don't fully leverage all features from it. There are also others web technologies like SOAP that uses HTTP protocol only for transmission and uses only small fraction of its capabilities. Because of this, it may seems like HTTP protocol is not very useful and it has only small set of features. 
 
-In reality, HTTP is very rich and powerful synchronous request/response-based application network protocol with many useful and interesting capabilities for developers. It is used for distributed, collaborative, document-based systems. The protocols works in simple way, the client sends request message with defined HTTP method to be invoked, headers, location of resource for invocation and it can also contain message body that can almost anything.
+In reality, HTTP is very rich and powerful synchronous request/response-based application network protocol with many useful and interesting capabilities for developers. It is used for distributed, collaborative, document-based systems. The protocol works in simple way, the client sends request message with defined HTTP method to be invoked, headers, location of resource for invocation and it can also contain message body that can almost anything.
 
-The server that handled the requests message, will send response message with response code, message explaining the code, headers and optional message body. HTTP defines several response codes for different scenarios\footnote{\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}}.\cite{resteasy-book}
+The server that handles the request message, will send response message with response code, message explaining the code, headers and optional message body. HTTP defines several response codes for different scenarios\footnote{\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}}.\cite{resteasy-book}
 
 \subsection{RESTful webservices}
-As stated previously, REST was really just explanation for Web's success and growth, but after few years after publication of Fielding's PhD thesis, developers realized real potential of REST. They realized that concepts described in REST architecture can be used for building distributed services and modelling SOAs\footnote{Service-Oriented Architectures}. 
+As stated previously, REST was really just explanation for Web's success and growth, but after few years after the publication of Fielding's PhD thesis, developers realized real potential of REST. They realized that concepts described in the REST architecture can be used for building distributed services and modelling SOAs\footnote{SOA --Service-Oriented Architectures}. 
 
-SOA is a design pattern that is used for a long time. The simplest description of main concept and idea of SOA is that systems should be designed as set of small reusable, decoupled and distributed services. By combining these services and publishing them on the network, should create larger and more complex systems. There were several technologies used for building SOAs in the past like CORBA or Java RMI. Nowadays, most associated technology with SOA are SOAP-based web services\footnote{Simple Object Access Protocol}.  
+SOA is a design pattern that is used for a long time. The simplest description of main concept and idea of SOA is that systems should be designed as set of small reusable, decoupled and distributed services. By combining these services and publishing them on the network, should create larger and more complex systems. There were several technologies used for building SOAs in the past like CORBA or Java RMI. Nowadays, most associated technology with SOA are SOAP-based web services.  
 
 
 \subsection{RESTful architectural principles}
-Web service build upon principles of REST architecture are called RESTful web services. These services are used for building system based on SOA principles. This section will describe each of the architectural principles of REST in more detail and explain why these principles are important for writing a web service.
+A web service build upon principles of REST architecture are called RESTful web services. These services are used for building systems based on SOA principles. This section will describe each of the architectural principles of REST in more detail and explain why these principles are important for writing a web service.
 
 
 \subsection*{Addressability}
-Addressability in the systems means that every resource is reachable by unique identifier. For this standardized object identity in environment is needed, which is not so common in environments. In RESTful services, addressability is achieved by use of URIs and each HTTP request must contain URI of the object that is requested. The format of URI must be of course standardized and it shown on example \ref{rest-uri}.
+An addressability in the systems means that every resource is reachable by the unique identifier. For this, standardized object identity in environment is needed which is not so common in environments. In RESTful services, addressability is achieved by use of URIs and each HTTP request must contain URI of the object that is requested. The format of URI must be of course standardized and it shown on example \ref{rest-uri}.
 
 \begin{listing}[ht]
 	\inputminted[]{bash}{sources/rest-uri.java}
@@ -425,42 +426,42 @@ Addressability in the systems means that every resource is reachable by unique i
 	\label{rest-uri}
 \end{listing}
 
-The format  URI is break down to six parts, where first part is \textit{scheme} that specifies protocol used for communication, in RESTful web is usually \textit{http} or \textit{https}. Next ones are \textit{host} that contains DNS\footnote{Domain Name System} name or IP address and optional \textit{port}. These two parts represent location of resource on the network. After them is \textit{path} part that specifies path to desired resource, similar to directory list of a file on file system. Last two parts are optional where \textit{query} is list of parameters represented as name-value pairs delimited by "\&" character and \textit{fragment} is usually used to point in certain place in queried document.
+The format of URI is break down to six parts, where first part is \textit{scheme} that specifies protocol used for the communication, in RESTful web service it is usually \textit{http} or \textit{https}. Next ones are \textit{host} that contains DNS\footnote{DNS -- Domain Name System} name or IP address and optional \textit{port}. These two parts represent a location of resource on the network. After them is \textit{path} part that specifies path to desired resource, similar to directory list of a file on the file system. Last two parts are optional where \textit{query} is list of parameters represented as name-value pairs delimited by "\&" character and \textit{fragment} part is usually used to point to a certain place in the queried document.
 
 \subsection*{A uniform, constrained interface}
-To fulfil this principle of REST, application must only use finite set of operations of the application protocol on which are its services distributed. When developing RESTful web service this means only use methods of HTTP protocol. There are only few operational methods defined on HTTP where each method has specific purpose and these methods are:
+To fulfil this principle of REST, application must only use finite set of operations of the application protocol on which are its services distributed. When developing RESTful web service, this means only use methods of HTTP protocol. There are only few operational methods defined on HTTP where each method has specific purpose and these methods are:
 
 \begin{itemize}
 \item
-\textit{GET} -- read-only operation used for querying server for specific information. This operation is idempotent, which means that applying this operation many times, the result is always the same. It also safe in meaning that it doesn't change state of the server.
+\textit{GET} -- an read-only operation used for querying server for specific information. This operation is idempotent, which means that applying this operation over and over will always generate the same result. It also safe in meaning that it doesn't change the state of the server.
 
 \item
-\textit{PUT} -- operation used for storing message body on the server, usually modelled as insert or update. It is also idempotent, because sending the same message more than once has no effect on server.
+\textit{PUT} -- an operation used for storing message body on the server, usually modelled as insert or update. It is also idempotent, because sending the same message more than once has no effect on the server.
 
 \item
-\textit{DELETE} -- the name is self explanatory, idempotent operation for removing resources.
+\textit{DELETE} -- the name is self-explanatory, an idempotent operation for removing resources.
 
 \item
-\textit{POST} -- operation for modifying (updating) service. It is only nonidempotent and unsafe operation of HTTP. This means that request may or may not contain information and also response may or may not contain information.
+\textit{POST} -- an operation for modifying (updating) the service. It is only nonidempotent and unsafe operation of HTTP. This means that the request may or may not contain information and also response may or may not contain information.
 
 \item
 \textit{HEAD} -- similar to \textit{GET} except no body is returned, only headers and response code.
 
 \item
-\textit{OPTIONS} -- operation for getting information about communication options. Mainly used for getting information on capabilities of the server and a resource without triggering any action.
+\textit{OPTIONS} -- an operation for getting information about communication options. Mainly used for getting information on capabilities of the server and a resource without triggering any actions.
 
 \item
 \textit{TRACE} and \textit{CONNECT} -- unimportant operations without any use in RESTful web service.
 \end{itemize}
 
-Plus constraining interface of web service has few more advantages. One them is \textit{interoperability}. HTTP is ubiquitous protocol and almost all modern programming languages have HTTP client library. So, it makes sense to expose web service over HTTP, because people will able to use the exposed web service without any additional requirements. Older technologies have vendor specific client libraries and generated stub codes like \textit{WSDL} files, that creates problem with vendor interoperability in the applications. RESTful web services don't have this problems and developers can focus on more important things in the application.
+Plus constraining interface of web service has few more advantages. One them is interoperability. HTTP is ubiquitous protocol and almost all modern programming languages have HTTP client library. So, it makes sense to expose web service over HTTP, because people will be able to use the exposed web service without any additional requirements. Older technologies have vendor specific client libraries and generated stub codes like \textit{WSDL} files, that creates problem with vendor interoperability in applications. RESTful web services don't have these problems and developers can focus on more important things in the application.
 
-A constrained interface with its well-defined methods have predictable behaviour that can be leverage for for better performance. This means RESTful web services are better in scaling, which is another advantage and that is \textit{scalability}. RESTful web services are taking advantage of caching mechanism of HTTP protocol. HTTP has very rich configuration for caching semantics that can be used for better performance. So, it is possible to configure caching semantics on defined method and make the same calls on same clients load much faster, because most of the information were cached on the first call. This is use of the same principle as with web pages and browsers. 
+A constrained interface with its well-defined methods have predictable behaviour that can be leverage for better performance. This means RESTful web services are better in scaling, which is another advantage and that is scalability. RESTful web services are taking the advantage of the caching mechanism of the HTTP protocol. HTTP has very rich configuration for caching semantics that can be used for better performance. So, it is possible to configure caching semantics on defined method and make the same calls on same clients load much faster, because most of the information were cached on the first call. This is use of the same principle as with web pages and browsers. 
 
 \subsection*{Representation-oriented}
-Complexity of interaction between client and server in RESTful application is in representations being sent back and forth. Representations can be for almost in any format used in systems, for example XML, JSON, stream, YAML\footnote{YAML Ain't Markup Language}. Because RESTful web services are communicating via HTTP, messages bodies of requests and responses are acting as representations.
+The complexity of interaction between client and server in RESTful application is in representations being passed back and forth. Representations can be for almost in any format used in systems, for example XML, JSON, stream, YAML\footnote{YAML -- YAML Ain't Markup Language}. Because RESTful web services are communicating via HTTP, message bodies of requests and responses are acting as representations.
 
-HTTP provides \textit{Content-Type} header for specification of data formats use between client and server. Value of this header is string in MIME\footnote{Multipurpose Internet Mail Extension} format, which is very simple: \textit{type/subtype;name=value;name=value}. Where \textit{type} is the main format family and \textit{subtype} is category. Plus there is possibility to define name/value properties. Some of the common examples are :
+HTTP provides \texttt{Content-Type} header for specification of data formats use between client and server. Value of this header is string in MIME\footnote{MIME -- Multipurpose Internet Mail Extension} format, which is very simple: \textit{type/subtype;name=value;}. Where \textit{type} is the main format family and \textit{subtype} is a category. Plus there is a possibility to define name/value properties. Some of the common examples are:
 
 \begin{itemize}
 \item
@@ -473,25 +474,25 @@ HTTP provides \textit{Content-Type} header for specification of data formats use
 \textit{text/html;charset=iso-8859-1}
 \end{itemize}
 
-Another feature of HTTP is possibility for negotiation of the message formats sent between client and server, which very useful in web services. There is possibility to define \textit{Accept} header on client that describes preferred formats of responses. This can be used for definition of services on the same URIs and same methods but with different return MIME type. Using this, application can have similar methods but each for different client with its preferred data format.
+Another feature of HTTP is a possibility for an negotiation of message formats sent between the client and the server, which very useful in web services. There is also a possibility to define a \textit{Accept} header on the client that describes preferred formats of responses. This can be used for the definition of services on the same URIs and same methods but with different return MIME type. Using this, an application can have similar methods but each for a different client with its preferred data format.
 
 \subsection*{Stateless communication and HATEOAS}
-Next mentioned principle of RESTful web service is its statelessness, but that mean the application cannot have a state. Stateless in RESTful means that server doesn't store any client session data and instead only manages states of resources it exposes. Session specific data, if they are needed, must be maintained by client and can be send with request if needed. This feature can be leverage for easier scaling in clustered environments because only machines need to be added for scale up. 
+Next mentioned principle of RESTful web service is its statelessness, but this means that the application cannot have a state. Stateless in RESTful means that server doesn't store any client session data and instead only manages states of resources it exposes. Session specific data, if they are needed, must be maintained by the client and can be send with the request if needed. This feature can be leverage for easier scaling in clustered environments because only machines need to be added for a scale up. 
 
-The last principle of RESTful web service is HATEOS where the main idea is using Hypermedia As The Engine of Application State (HATEOAS). This approach is very useful because hypermedia have added support for embedding links to other services or information within document format. One of the uses is for example aggregating complex sets of information from different sources and using hyperlinks in document to reference additional information without bloating responses. But the "engine" part is much more useful because it is different approach from traditional and older distributed applications that have list of services they know exist. These applications then call central server for location of these services. Instead RESTful web services with HATEOAS with each response returned from a server define new possible interactions that can be done next, as well transition state of application.
+The last principle of RESTful web services is HATEOS where the main idea is using Hypermedia As The Engine of Application State (HATEOAS). This approach is very useful because hypermedia have added support for embedding links to other services or information within the document format. One of the uses is for example, aggregating complex sets of information from different sources and using hyperlinks in the document to reference additional information without bloating responses. But the "engine" part is much more useful because it is different approach from traditional and older distributed applications that have a list of services they know exist. These applications then call central server for a location of these services. Instead RESTful web services with each response returned from a server define new possible interactions that can be done next, as well transition state of the application.
 
 \section{RESTEasy}
-RESTEasy is project providing frameworks for building RESTful Web Services and RESTful Java applications. This means that it is a fully certified and portable implementation of the JAX-RS specification which can run in any servlet container. It is also no surprise that it is fully integrated with JBoss Application Server to make better experience in that environment. To understand better what exactly is RESTEasy, it is required to understand what exactly is JAX-RS.\cite{resteasy-doc}
+RESTEasy is a JBoss project providing frameworks for building RESTful Web Services and RESTful Java applications. This means that it is a fully certified and portable implementation of the JAX-RS specification which can run in any servlet container. It is also no surprise that it is fully integrated with JBoss Application Server and WildFly to make better experience in that environment. To understand better what exactly is RESTEasy, it is required to understand what exactly is JAX-RS specification.\cite{resteasy-doc}
 
  
 \subsection{JAX-RS 1.0 and 1.1}
 RESTful services could be developed in Java for a long time using servlet API, but this approach is really hard and requires lot of code for simple operations. To simplify implementation of RESTful service, a new specification was defined in 2008 called JAX-RS. JAX-RS is a new JCP specification that provides a Java API for RESTful Web Services over the HTTP protocol. This section will just provide some basic information about the this specification. The more detailed description and documentation can be found on official web page of JAX-RS\footnote{\url{https://jax-rs-spec.java.net/}} or on RESTEasy web page\footnote{\url{http://resteasy.jboss.org/}}. 
 
-JAX-RS is a framework that focus on applying Java annotations introduced in Java SE 5 on plain Java objects. JAX-RS API is part of JSR-311\footnote{\url{https://jcp.org/en/jsr/detail?id=311}}. To simplify development of RESTful web services, this framework has annotations to bind specific URI patterns and HTTP methods to individual method in basic Java class. It has also parameter injection annotations for easier parsing of information from HTTP requests. Another feature is message body readers and writers for decoupling data format marshalling and unmarshalling from custom Java objects. Also it has exception mappers for mapping application-thrown exceptions to HTTP response code and message. The last useful feature that it provides are facilities for HTTP content negotiation.\cite{resteasy-book}\cite{jax-wiki}
+JAX-RS is a framework that focuses on applying Java annotations introduced in Java SE 5 on plain Java objects. JAX-RS API is part of JSR-311\footnote{\url{https://jcp.org/en/jsr/detail?id=311}}. To simplify development of RESTful Web Services, this framework has annotations to bind specific URI patterns and HTTP methods to individual methods in the basic Java class. It has also parameter injection annotations for easier parsing of information from HTTP requests. Another feature are message body readers and writers for decoupling data format marshalling and unmarshalling from custom Java objects. Also it has exception mappers for mapping application-thrown exceptions to HTTP response code and message. The last useful feature that it provides are facilities for HTTP content negotiation.\cite{resteasy-book}\cite{jax-wiki}
 
-JAX-RS 1.1 is upgrade version of the same framework with few changes. The biggest one is that is became official part of Java EE 6, which means that no configuration is necessary to start using JAX-RS. Some of  the enhancements to framework include adding examples to clarifying and correcting Javadoc comments related to use of JAX-RS. There was also added new annotation \textit{@ApplicationPath}, which can be use to specify base URI for all \textit{@Path} annotations. Complete list of all changes can be found in official changelog\footnote{\url{https://jcp.org/aboutJava/communityprocess/maintenance/jsr311/311changelog.1.1.html}}. \cite{jax-1.1}\cite{jax-1.1-2}
+JAX-RS 1.1 is upgrade version of the same framework with few changes. The biggest one is that is became official part of Java EE 6, which means that no configuration is necessary to start using JAX-RS. Some of the enhancements to the framework include adding examples to clarifying and correcting Javadoc comments related to use of JAX-RS. There was also added new annotation \texttt{@ApplicationPath}, which can be use to specify base URI for all \texttt{@Path} annotations. Complete list of all changes can be found in the official changelog\footnote{\url{https://jcp.org/aboutJava/communityprocess/maintenance/jsr311/311changelog.1.1.html}}. \cite{jax-1.1}\cite{jax-1.1-2}
 
-It is important to note that both JAX-RS 1.0 and 1.1 are only server-side specifications without any support for client. Because of that, RESTEasy innovated JAX-RS and added RESTEasy JAX-RS Client framework and more about this technology in subsection \ref{resteasy}. But this drawback was removed in version 2.0 and will be described to more detail in next subsection.
+It is important to note that both JAX-RS 1.0 and 1.1 are only server-side specifications without any support for the client side. But this drawback was removed in the version 2.0 and will be described in a more detail in the next subsection.
 
 \subsection{JAX-RS 2.0}\label{jax2.0}
 With Java EE 7 release also came new version of JAX-RS 2.0 that upgraded the framework and added new features from which the key features are:
@@ -509,7 +510,7 @@ Filters and interceptors
 This subsection provides basic overview of mentioned features. Of course there are other minor features and upgrades to make the framework more useful and stable.
 
 \subsection*{Client API}\label{client-api}
-Both previous versions of JAX-RS were missing client API, as it was stated previously. Because of this missing feature, each implementation of JAX-RS created their own client API, which is not so great for standardized framework. So version 2.0 contains fluent, low-level, request building API that can be seen on example \ref{rest-client}. 
+Both previous versions of JAX-RS specification were missing client API, as it was stated previously. Because of this missing feature, each implementation of JAX-RS created their own client API, which is not so great for standardized framework. So version 2.0 contains fluent, low-level, request building API that can be seen on example \ref{rest-client}. 
 
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/client.java}
@@ -517,11 +518,11 @@ Both previous versions of JAX-RS were missing client API, as it was stated previ
 	\label{rest-client}
 \end{listing}
 
-The base of the API is \textit{Client} interface that manages HTTP connections and acts also as factory for \textit{WebTargets}. \textit{WebTarget} represents specific URI for the request and whole request is build and executed on it. In most times the return object is \textit{Response} from which \textit{readEntity()} method is use for getting the entity. API also provides way to get specific Java object directly without working with \textit{Response} object as shown on example \ref{rest-client} with \textit{Car} object.
+The base of the API is \texttt{Client} interface that manages HTTP connections and acts also as a factory for \texttt{WebTargets}. \texttt{WebTarget} represents specific URI for a request and the whole request is build and executed on it. In most times the return object is \texttt{Response} from which \texttt{readEntity()} method is used for getting the entity. API also provides way to get specific Java object directly without working with \texttt{Response} object as shown on example \ref{rest-client} with \texttt{Car} object.
 
-Client API also provides support for asynchronous requests which can be use for execution of HTTP requests in the background. There are two possibilities to get the response and that is either polling or receiving a callback. For polling is used \textit{Future} interface which is part of JDK from version 5.0 and client example with \textit{Future} is shown on \ref{future}. For callbacks is used \textit{InvocationCallback} interface shown on example \ref{callback}, where request is registered with callback instance and invoked in the background. The interface depending on the status of response executes a defined code\cite{jax-rs-2.0-new}\cite{jax-rs-2.0}. Client example with callback is shown on example \ref{callbackClient}.
+Client API also provides support for asynchronous requests which can be use for the execution of HTTP requests in the background. There are two possibilities to get the response and that is either polling or receiving a callback. For polling is used \texttt{Future} interface which is part of JDK from version 5.0 and client example with \texttt{Future} is shown on example \ref{future} in the appendix. For callbacks is used \texttt{InvocationCallback} interface shown on example \ref{callback}, where the request is registered with the callback instance and is invoked in the background. The interface depending on the status of the response executes a defined code\cite{jax-rs-2.0-new}\cite{jax-rs-2.0}. The client example with callback is shown on example \ref{callbackClient}.
 
-This subsection just gave a quick look on Client API. For more detail about Client API check specification and Javadoc.
+This subsection just gave a quick look on the Client API. For more detail about the Client API check the specification and the Javadoc of JAX-RS 2.0.
 
 \begin{listing}[ht]
 	\inputminted[]{java}{sources/callback.java}
@@ -530,14 +531,14 @@ This subsection just gave a quick look on Client API. For more detail about Clie
 \end{listing}
 
 \subsection*{Asynchronous server-side}
-Typical HTTP server works in a way that when requests comes in, one thread is responsible for the processing and generating response to the client. This is no problem because requests are short-lived, so few hundred threads can handle few thousand concurrent users with good response times. This was fine until evolution of services and HTTP traffic with JavaScript clients. One scenario started to became a problem and that is scenario where server needs to push events to the client. In this scenario, clients need to know actual information from the server, for example stock price, so they usually send GET request and just block indefinitely until server was ready to send back response. With many clients, this creates large amount of open, long-running requests that are just idling and with them threads too. This scenario is very consuming on operating systems resources and it is really hard to scale up these server-push applications because JAX-RS had one thread per connection model.\cite{resteasy-book}
+Typical HTTP server works in a way that when requests comes in, one thread is responsible for processing and generating response to the client. This is no problem because requests are short-lived, so few hundred threads can handle few thousand concurrent users with good response times. This was fine until evolution of services and HTTP traffic with JavaScript clients. One scenario started to became a problem and that is the scenario where the server needs to push events to the client. In this scenario, clients need to know actual information from the server, for example a stock price, so they usually send \textit{GET} request and just block indefinitely until the server is ready to send back a response. With many clients, this creates large amount of open, long-running requests that are just idling and also threads with them. This scenario is very consuming on operating systems resources and it is really hard to scale up these server-push applications, because JAX-RS had one thread per connection model.\cite{resteasy-book}
 
-To conquer this problem, JAX-RS 2.0 provides a new feature and that is support for asynchronous HTTP. With it, it is possible to suspend current server-side request and have different thread handle sending back the response to the client. This feature can be used to implement long-polling interfaces or server-side push as mentioned. The server-side push problem can be resolved with small set of threads delegated just for sending the responses back to polling clients.
+To conquer this problem, JAX-RS 2.0 provides a new feature and that is a support for asynchronous HTTP. With it, it is possible to suspend the current server-side request and have different thread handle sending back the response to the client. This feature can be used to implement long-polling interfaces or the server-side push as mentioned. The server-side push problem can be resolved with small set of threads delegated just for sending  responses back to polling clients.
 
-This feature is very analogous to Servlet 3.0 specification and similar to other features of JAX-RS is also annotation driven. To use this feature, application must interact with \textit{AsyncResponse} interface. This is done by injecting this interface into JAX-RS method with \textit{@Suspend} annotation.\cite{resteasy-book}\cite{jax-rs-2.0} Example is provided in \ref{async-server} and more detail information can be found in specification and Javadoc.
+This feature is very analogous to Servlet 3.0 specification and similar to other features of JAX-RS, it is also annotation driven. To use this feature, the application must interact with \texttt{AsyncResponse} interface. This is done by injecting this interface into JAX-RS method with \texttt{@Suspend} annotation.\cite{resteasy-book}\cite{jax-rs-2.0} Example is provided in appendix \ref{async-server} and more detail information can be found in the specification and the Javadoc of JAX-RS 2.0.
 
 \subsection*{Filters and entity interceptors}
-Last notable new feature of JAX-RS 2.0 are filters and entity interceptors. They are use for intercepting requests and response processing. Notable use cases are authentication, caching or encoding. Similar to Client API, most JAX-RS provides implemented their own interceptor prior to version 2.0. The framework defines two concepts for interceptions and they are:
+Last notable new feature of JAX-RS 2.0 are filters and entity interceptors. They are used for intercepting requests and the response processing. Notable use cases are authentication, caching or encoding. Similar to the Client API, most implementations of JAX-RS implemented their own interceptors prior to version 2.0. The framework defines two concepts for interceptions and they are:
 \begin{itemize}
 \item 
 filters
@@ -546,18 +547,18 @@ filters
 entity interceptors
 \end{itemize}
 
-Filters are used for modification or processing of incoming and outgoing requests or responses. They are executed before and after request and response processing. Main task for entity interceptors is marshalling and unmarshalling of message bodies.
+Filters are used for a modification or processing of incoming and outgoing requests or responses. They are executed before and after the request and the response processing. Main task for entity interceptors is marshalling and unmarshalling of message bodies.
 
-In filters, there are two main groups: server side filters and client side filters. Both groups have 2 different filter for request and response. Server side filters are \textit{ContainerRequestFilter} that runs before JAX-RS resource method is invoked and \textit{ContainerResponseFilter} that runs after invocation of resource method. Added feature for ContainerRequestFilter is possibility to specify when the filter should be invoked, before resource method is matched or after it is matched. This is defined by \textit{@PreMatching} and \textit{@PostMatching} annotations. Client side filters have also two types: ClientRequestFilter and ClientResponseFilter where request filters run before sending the HTTP request to the server and response filters run after receiving response from the server, but before the response body is unmarshalled. \cite{jax-rs-2.0}\cite{resteasy-book}
+In filters, there are two main groups: server-side filters and client-side filters. Both groups have two different filters for the request and  the response. Server-side filters are \texttt{ContainerRequestFilter} that runs before JAX-RS resource method is invoked and \texttt{ContainerResponseFilter} that runs after the invocation of the resource method. A added feature for \texttt{ContainerRequestFilter} is a possibility to specify when the filter should be invoked, before the resource method is matched or after it is matched. This is defined by \texttt{@PreMatching} and \texttt{@PostMatching} annotations. Client-side filters have also two types: \texttt{ClientRequestFilter} and \texttt{ClientResponseFilter} where request filters run before sending the HTTP request to the server and response filters run after receiving response from the server, but before the response body is unmarshalled. \cite{jax-rs-2.0}\cite{resteasy-book}
 
-Interceptors deal with message bodies and are executed in the same call stack as their corresponding reader and writer. Again there are two different types. One type is \textit{ReaderInterceptor} that wraps around \textit{MessageBodyReaders} and the second type is \textit{WriterInterceptor} that wraps around \textit{MessageBodyWriters}. They are many uses like implementation of specific encoding, generating digital signatures or posting and preprocessing Java object before or after it is marshalled.\cite{jax-rs-2.0}
+Interceptors deal with message bodies and are executed in the same call stack as their corresponding reader and writer. Again there are two different types. One type is \texttt{ReaderInterceptor} that wraps around \texttt{MessageBodyReaders} and the second type is \texttt{WriterInterceptor} that wraps around \texttt{MessageBodyWriters}. They are many uses for these interceptors like a implementation of specific encoding, generating digital signatures or posting and preprocessing a Java object before or after it is marshalled.\cite{jax-rs-2.0}
 
 
 %\subsection{Features of RESTEasy}\label{resteasy}
 
 
 \section{Existing RESTful components}
-The official distribution of Camel already provides several components that are used for integration with RESTful web services. There are mainly similar project to RESTEasy, that are also certified implementations of JAX-RS 2.0 specification. Notable examples are:
+The official distribution of Camel already provides several components that are used for a integration with RESTful Web Services. There are mainly similar project to RESTEasy, that are also certified implementations of JAX-RS 2.0 specification. Notable examples are:
 \begin{itemize}
 \item
 Camel CXF
@@ -572,14 +573,14 @@ Camel Spark-rest
 Camel Rest
 \end{itemize}
 
-Each component and technology has specific pros and cons. Spark-rest is component integrating Spark Rest Java library running only on Java 8 and supporting only consumer endpoint. Restlet and CXF components are integrating Restlet and CXF frameworks, both have producer and consumer endpoints along with few bonus features. 
+Each component and technology has specific pros and cons. Spark-rest is component integrating Spark Rest Java library running only on Java 8 and supporting only consumer endpoint. Spark-rest is not a certified implementation of JAX-RS 2.0, but can be for the server-side. Restlet and CXF components are integrating Restlet and CXF frameworks, both have producer and consumer endpoints along with few unique features. 
 
-Last component is Camel Rest that was added in Camel 2.14 and it is used for defining REST endpoints using REST DSL\footnote{\url{http://camel.apache.org/rest-dsl.html}} right in the camel route. There is also possibility to configure this component to use some other RESTful component as base. Any component can be integrated with REST DSL if they have Rest consumer in Camel. For the integration, new component must implemented \textit{RestConsumerFactory} and the component itself then must implement logic to create a Camel consumer that exposes the REST services based on the given parameters, such as path, verb, and other options.
+The last component is Camel Rest that was added in Camel 2.14. It is used for defining REST endpoints using REST DSL\footnote{\url{http://camel.apache.org/rest-dsl.html}} right in the Camel route. There is also a possibility to configure this component to use some other RESTful component as a base. Any component can be integrated with REST DSL if they have a Rest consumer in Camel. For the integration, new component must implement \texttt{RestConsumerFactory} and the component itself then must implement logic to create a Camel consumer that exposes the REST services based on the given parameters, such as path, verb, and other options.
 
 \subsection{Camel Resteasy -- motivation}
-As for now Camel already provides lot of RESTful components, so why exactly do we need a new RESTful component if there are components capable to satisfy user's needs. Best answer is probably, because we can. If there are more implementations of JAX-RS specification, then there should be more Camel components for each. This way, users are not limited and can choose component fro their preferred implementation. 
+As for now Camel already provides RESTful components, so why exactly do we need a new RESTful component if there are components capable to satisfy user's needs. Best answer is probably, because we can. If there are more implementations of the JAX-RS specification, then there should be Camel component for the each one. This way, users are not limited and can choose component for their preferred implementation. 
 
-Another thing to consider is tight connection between RESTEasy and products like JBoss EAP, JBoss AS or WildFly. All these servers have RESTEasy integrated and are using out for box. Adding possibility to also create Camel routes integrated with RESTEasy on these servers can possibly help lot of users which are already familiar with RESTEasy framework. Of course they is no problem to deploy application with CXF implementation and user Camel CXF component on these servers, but complicate things if we can just create Camel RESTEasy component. 
+Another thing to consider is the tight connection between RESTEasy and products like JBoss EAP, JBoss AS or WildFly. All these servers have RESTEasy integrated and are using out for box. Adding a possibility to also create Camel routes integrated with RESTEasy on these servers can help lot of users which are already familiar with RESTEasy framework. Of course they is no problem to deploy application with CXF implementation and user Camel CXF component on these servers, but that just complicates things if we can just easily create a RESTEasy component. 
 
 %
 \chapter{Analysis and Design}
@@ -646,7 +647,7 @@ Next diagram shown on figure \ref{}, illustrates the last possible Consumer in t
 The final diagram shown on figure \ref{}, depicts message flow in a Producer. Producer message flow is reverse to Consumer message flow. It process Exchange from the route and send the HTTP request to the target. 
 
 
-\chapter{Implementation}
+\chapter{Implementation}\label{impl}
 As stated before, the goal of this thesis is to integrate Apache Camel and RESTEasy to create a new Camel Resteasy component. This chapter describes source code and implementation of Camel Resteasy component. 
 
 The implementation was done in Java programming language, similar to Camel core and other components. It was also implemented with regards to restrictions set by Camel framework for components mentioned in previous chapters. Version that were use in the source code:
@@ -784,17 +785,31 @@ Some units test also leverage CamelTestSupport class, that provides lot of usefu
 
 Camel has convention for structure of unit tests in which every test class represents scenario and has descriptive self-explaining name. This is done to be much more understandable and clear for outside user. 
 
-\section{Examples of usage}
-???
+%\section{Examples of usage}
+%???
 
 \chapter{Conclusion}
-The main task of this master's thesis was integration of RESTEasy project with Apache Camel project. This means design and developing new Camel component that should be used for integration of RESTful web service and Camel framework. 
+The main task of this master's thesis was integration of RESTEasy project with Apache Camel project. This means design and developing new Camel component that should be used for integration of RESTful web service and Camel framework. Another requirement set by thesis description was to provide unit tests. Author should also cooperate with community, develop new Camel component by project development standards and investigate RESTEasy implementation. The thesis should also provides comparison of JAX-RS 1.1 and JAX-RS 2.0 specifications.
+
+The result of this master's thesis is Camel Resteasy component. This new component can be used to connect exposed RESTful web service to the Camel Consumer. Furthermore component's Producer can be used as HTTP client that is based on RESTEasy Client API. Thesis also provides comparison between JAX-RS specifications that can be found in chapter \ref{tech}. 
+
+The source code of the component is included in attachments to this thesis. The source code was also hosted on GitHub\footnote{\url{https://github.com/romanjakubco/camel-resteasy}} during development and the latest version can be found there. It is known that computer software is never absolutely perfect, so there is a high chance that new issues and bugs will be found. This is also reason why GitHub was selected for hosting the source code, it provides useful tools for reporting issues or even submitting fixes by pull requests from other developers.  
+
+As this thesis has also implementation part, it contains the whole source code of Camel Resteasy component. Following Camel project documentation, the skeleton for the component was generated using Maven archetype and the biggest part of the work was integrating RESTEasy into the Camel. Because RESTEasy is different in its approach in creating server for RESTful web services compared to other implementations of JAX-RS specification, not providing other way than creating servlet via web.xml file, the mechanism for connecting the servlet to Consumers and keeping track of all consumers was created. Implementation also leverage already implemented component for HTTP protocol as RESTful web services are based around HTTP. Furthermore, there was need for binding between HTTP messages and messages send in Camel routes on Producer side. The Producer of the component is based on RESTEasy Client API that is providing also additional feature called Proxy Framework described in chapter \ref{impl}. Mechanism for enabling and configuring this feature was developed for Producer part of the component.
+
+The new component also provides documentation of usage on GitHub and source code is also documented. Great advantage of Camel is its strong and vital community that provides examples and answers to various problems on StackOverflow\footnote{\url{http://stackoverflow.com/}}. The RESTEasy project is also well documented and used by community mostly around JBoss projects that also can provide help with various problems.
+
+This component was requested by the community, so there is a effort to submit this component into Apache Camel project but at the moment there is a problem with requirements defined by Camel. One of the requirements for submitting new component into Camel distribution is that all dependencies must be OSGi ready. From various issues found on the web, it seems that RESTEasy has some problems with OSGi environment, mostly in class loading. In different environments like WildFly application server that provides RESTEasy as standard module for creating RESTful web service, the new component works without a problem. This is also demonstrated in unit tests provided with the source code. 
+
+So one of the main goals for the future is to look at RESTEasy in OSGi environment and found a way to make it work correctly. Of course bug fixes should be done as well and as soon as possible. Various improvements and suggestions for new features from community are also welcomed and will be implemented depending on current situation.
 
 
 
 
 
 
+%The goal of this thesis is to develop a new component to Apache Camel framework that will integrate RESTEasy library for web services interface with Camel and provide REST interface endpoints. The student will evaluate and compare JAX-RS 1.1 and JAX-RS 2.0 application interface, and support the selected application interface in his implementation. The exposed endpoints will be configured via JAX-RS annotations and endpoint consumer will use client interface provided by RESTEasy library.
+%Co-operate with community on exact specification of necessary features and commit a working implementation together with tests and documentation required by project development standards.
 %% Lists of tables and figures, glossary, etc.
 %%\printindex
 %%\printglossary

@@ -268,7 +268,7 @@ This chapter will describe architecture of the Camel from high-level and then ta
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.9\linewidth]{sources/CamelContextCrop.jpg}
+\includegraphics[width=0.9\linewidth]{images/CamelContextCrop.jpg}
 \caption{Overview of CamelContext}
 \label{camelContext}
 \end{figure}
@@ -321,7 +321,7 @@ The last task of endpoint is to be factory for creating producers (sender) and c
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth]{sources/Diagram1.jpeg}
+\includegraphics[width=0.9\linewidth]{images/Diagram1.jpeg}
 \caption{Overview of endpoint URI}
 \label{uri}
 \end{figure}
@@ -587,28 +587,30 @@ Another thing to consider is the tight connection between RESTEasy and products 
 This chapter describes software analysis of new Camel component, and it is taking into the account facts written in previous chapter. Given that the development of new Camel component is pretty restricted and it must follow base skeleton given by the framework, not every part of software analysis is needed. The most useful part of software analysis in this scenario are data flow diagrams (DFD). But the first thing to do, is to identify base requirements for the new component, so the analysis starts with identifying these requirements. Next section then shows data flow diagram (DFD) that illustrate message flow in Camel. This should also help to understand how will the new component work. Last part of this chapter is description of design decisions made on facts provided in this chapter. 
 
 \section{Requirements}
-The purpose of the thesis is to integrate RESTEasy project with Apache Camel framework as it is defined in assignment. That means creation of new Camel component that will be exposing REST interface endpoints in Camel, so basically a consumer. Because it should be integrated with RESTEasy project, the exposed endpoints should be configured via JAX-RS annotations provided by RESTEasy. As mentioned previously, the newest version of RESTEasy is also fully certified implementation of JAX-RS 2.0 specification which means it also provides client API that should be use as Camel producer. This component is required by community for some time and the requirement is logged in  
+The purpose of this thesis is to integrate RESTEasy project with Apache Camel framework as it is defined in assignment. That means creation of new Camel component that will be exposing REST interface endpoints in Camel, so basically a REST consumer. Because it should be integrated with RESTEasy project, the exposed endpoints should be configured via JAX-RS annotations provided by  the RESTEasy. As mentioned previously, the newest version of RESTEasy is also a fully certified implementation of JAX-RS 2.0 specification which means it also provides Client API that should be used as Camel producer. This component is required by the community for some time and the requirement is logged in  
 the Apache's Jira\footnote{\url{https://issues.apache.org/jira/browse/CAMEL-2983}}.
 
-The assignment is only basic description of Camel component so there any really detailed listing of requirements and special features for this component. Therefore more detailed list of requirements and in some cases even restrictions was composed after analysis of RESTEasy project. Also some inspiration came after analysis of similar components providing REST endpoints. This is quick overview of defined requirements and default features for both consumer and producer.
+The assignment is only a basic description of the Camel component so there isn't any detailed listing of requirements and special features for this component. Therefore more detailed list of requirements and in some cases even restrictions was composed after analysis of the RESTEasy project. Also some inspiration came after analysis of similar components providing REST endpoints. This is a quick overview of defined requirements and default features for both the consumer and the producer.
 
 \subsection{Consumer}
+The Consumer should have these features:
+
 \begin{itemize}
 \item
-ability to create consumer connected with defined REST web service by RESTEasy (basic consumer)
+ ability to create Consumer connected with defined REST Web Service by RESTEasy (basic consumer)
 
 \item
-ability to create consumer defined in the route (camel proxy consumer)
+ability to create Consumer defined only in the route (camel proxy consumer)
 
 \item
-ability to define REST web service as interface with RESTEasy annotations with Consumer in the route and creating Response via route (proxy consumer)
+ability to define REST Web Service as interface with RESTEasy annotations with Consumer in the route and creating responses via route (proxy consumer)
 
 \item
-define allowed request methods for consumer defined only in the route
+possibility to define allowed request methods for Consumer defined only in the route
 
 
 \item
-ability to change Response returned from REST web service in the route, before it is send to the client 
+ability to change Response returned from REST Web Service in the route, before it is send to the client 
 
 \item
 both request and response should be routed into the route
@@ -620,37 +622,38 @@ DSL and Spring support
 \end{itemize}
 
 \subsection{Producer}
+The Producer should have these features:
 \begin{itemize}
 \item
-send HTTP request to defined target using RESTEasy Client API
+send a HTTP request to a defined target using RESTEasy Client API
 
 \item
-provide possibility for basic authentication with URI options
+provide the possibility for the basic authentication with URI options
 
 \item
-ability to use RESTEasy Proxy Framework Client API (more detail will be given in chapter \ref{})
+ability to use RESTEasy Proxy Framework Client API (more detail will be given in chapter \ref{producer})
 
 \item
 DSL and Spring support
 \end{itemize}
 
 \section{Camel's data flow}
-This section contains two DFDs illustrating data flow incoming into Consumer and outgoing from Producer. 
+This section contains several DFDs illustrating data flow incoming into Consumer and outgoing from Producer. 
 
-As defined in previous section, the new component provides three types of Consumer. Each of them has little bit different data flow, so to better understand them, there are three diagrams. The first diagram shown on the figure \ref{}, shows basic Consumer data (message) flow, where RESTEasy process HTTP request and create response according to implementation of service without sending it to the client. Afterwards, the response is send to Camel route as Exchange for another processing. HTTP request is also bundled into the Exchange in a special header. When the processing  is done, the final Response is returned to the client. 
+As defined in previous section, the new component provides three types of Consumer. Each of them has little bit different data flow, so to better understand them, there are three diagrams. The first diagram shown on the figure \ref{}, shows basic Consumer data (message) flow, where RESTEasy servlet process a HTTP request and create a response according to the implementation of the service without sending it to the client. Afterwards, the response is send to Camel route as a Exchange for another processing. The HTTP request is also bundled into the Exchange in a special header. When the processing is done, the final Response is returned to the client. 
 
-The second diagram shown on the figure \ref{}, depicts data flow of the second type of consumer. This is a consumer, which is internally called Camel Proxy Consumer in this thesis. This type of Consumer is defined only in the route, that is exposing it as web service. The request should be processed in the route along with creation of response for the client. This consumer is really only bonus feature, that can be used for creation really simple web service without need to create class with JAX-RS annotations. 
+The second diagram shown on the figure \ref{}, depicts data flow of the second type of Consumer. This is a Consumer, which is internally called Camel Proxy Consumer in this thesis. This type of the Consumer is defined only in the route, that is exposing it as a web service. The request should be processed in the route along with the creation of a response for the client. This consumer is really only bonus feature, that can be used for the creation of a really simple web service without need to create a class with JAX-RS annotations. 
 
-Next diagram shown on figure \ref{}, illustrates the last possible Consumer in the new component, which is internally called Proxy Consumer. In this type of Consumer, users only have to define interface with desired methods annotated with JAX-RS annotations. In this type, RESTEasy will take care of processing and matching HTTP request, which is afterwards send for processing as Exchange into the route and response should be created in the route.  
+The next diagram shown on figure \ref{}, illustrates the last possible Consumer in the new component, which is internally called the Proxy Consumer. In this type of the Consumer, users only have to define a interface with desired methods annotated with JAX-RS annotations. In this type, the RESTEasy will take care of the processing and the matching of the HTTP request, which is afterwards send for the processing as a Exchange into the route and the response should be created in the route.  
 
 
 The final diagram shown on figure \ref{}, depicts message flow in a Producer. Producer message flow is reverse to Consumer message flow. It process Exchange from the route and send the HTTP request to the target. 
 
 
 \chapter{Implementation}\label{impl}
-As stated before, the goal of this thesis is to integrate Apache Camel and RESTEasy to create a new Camel Resteasy component. This chapter describes source code and implementation of Camel Resteasy component. 
+As stated before, the goal of this thesis is to integrate Apache Camel and RESTEasy to create a new Camel Resteasy component. This chapter describes source code and implementation of the Camel Resteasy component. 
 
-The implementation was done in Java programming language, similar to Camel core and other components. It was also implemented with regards to restrictions set by Camel framework for components mentioned in previous chapters. Version that were use in the source code:
+The implementation was done in the Java programming language, similar to the Camel core and other components. It was also implemented with regards to restrictions set by the Camel framework for components mentioned in previous chapters. Versions that were used in the source code:
 \begin{itemize}
 \item
 Java 1.7
@@ -663,65 +666,86 @@ RESTEasy 3.10.0
 \end{itemize}
 
 \section{Class diagram}
-The final fully exported class diagram for the Camel Resteasy component can be found in appendix \ref{}. Sections describing single classes of the component will use only single class diagrams.
+The final fully exported class diagram for the Camel Resteasy component can be found in the appendix \ref{}. Sections describing single classes of the component will use only single class diagrams.
 
 \section{ResteasyComponent class}
-ResteasyComponent class is the base of the whole implemented component and it is where everything starts. It extends HttpComponent to leverage already implemented code needed to run in Camel, after all Resteasy component is similar to HttpComponent, because it consumes HTTP requests. As it was already mentioned, main purpose of Component class is to be a factory of endpoints. Therefore createEndpoint() method must be implemented and it must override the same method from HttpComponent.
+The \texttt{ResteasyComponent} class is the base of the whole implemented component and it is where everything starts. It extends \texttt{HttpComponent} to leverage already implemented code needed to run in the Camel, after all Resteasy component is similar to \texttt{HttpComponent}, because it consumes HTTP requests. As it was already mentioned, the main purpose of \texttt{Component} class is to be a factory of endpoints. Therefore \texttt{createEndpoint()} method must be implemented and it must override the same method from the \texttt{HttpComponent} class.
 
-There is nothing special about implementation of this method. The first thing it does is that it reads all the configuration URI parameters and removes them to prevent mistakes in matching them as query parameters. Endpoint URI is then parsed from the rest of cleaned URI.
+There is nothing special about the implementation of this method. The first thing it does is that it reads all the configuration URI parameters and removes them to prevent mistakes in matching them as query parameters. The Endpoint URI is then parsed from the rest of the cleaned URI.
 
-There are two more methods that override methods from HttpComponent. These methods are connect() and disconnect(). They are use for connecting and disconnecting consumers from HttpRegistry. More about this class in section \ref{}. 
+There are two more methods that override methods from \texttt{HttpComponent}. These methods are \texttt{connect()} and \texttt{disconnect()}. They are used for connecting and disconnecting consumers from \texttt{HttpRegistry}. More about this class in section \ref{registry}. 
 
-This class also implements RestConsumerFactory interface to support configuration of route and options in REST DSL. To implement this interface, method createConsumer() must be implemented. This method just parse REST configuration from DSL and creates endpoint belonging to this configuration.
+This class also implements the \texttt{RestConsumerFactory} interface to support configuration of the route and options in REST DSL. To implement this interface, method \texttt{createConsumer()} must be implemented. This method just parses the REST configuration from DSL and creates a endpoint belonging to this configuration.
 
-ResteasyComponent has also one special property that can be set, when creating component in the Camel context. The name of property is proxyConsumersClasses and it is a String property that can be set to fully qualified names of Java interfaces annotated by JAX-RS annotations separated by comma. More detail about this property and its usage will provided in section \ref{servlet}.
+The \texttt{ResteasyComponent} has also one special property that can be set, when creating component in the Camel context. The name of  the property is \texttt{proxyConsumersClasses} and it is a string property that can be set to fully qualified names of Java interfaces annotated by JAX-RS annotations separated by comma. More detail about this property and its usage will provided in section \ref{servlet}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth]{images/component.png}
+\caption{ResteasyComponent}
+\label{comp}
+\end{figure}
 
 \section{ResteasyEndpoint class}
-ResteasyEndpoint is straightforward class that use as factory for creating Consumers and Producers for Resteasy component. Therefore there are two methods for this purpose, createConsumer() and createProducer(). These methods are self explaining, so there is nothing to add. This class also extends HttpEndpoint, to leverage already implemented code that is use in Consumer part.
+\texttt{ResteasyEndpoint}  is straightforward class that is used as a factory for creating \texttt{Consumers} and \texttt{Producers} for the Resteasy component. Therefore there are two methods for this purpose, \texttt{createConsumer()} and \texttt{createProducer()}. These methods are self explaining, so there is nothing to add. This class also extends \texttt{HttpEndpoint}, to leverage already implemented code that is used in consumer part of the component.
 
-This class also holds all the configuration parameters that were parsed in ResteasyComponent. Parameters are annotated with @UriParam for easier setting using Java Reflection API. The full list of parameters and their basic description is given in next subsection.
+This class also holds all configuration parameters that were parsed in \texttt{ResteasyComponent}. Parameters are annotated with \texttt{@UriParam} for easier setting using Java Reflection API. The full list of parameters and their basic description is given in the next subsection.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{images/endpoint.png}
+\caption{ResteasyEndpoint}
+\label{endpoint}
+\end{figure}
 
 \subsection{Parameters}
-There is not lot of configuration parameters for this component, but few of them are unique, so the list of parameters also provides basic description. Also some parameters are specific only for Consumer or Producer, which will be noted also in the list. This list contains some options for which it could be hard to understand their meaning or purpose, just from short description. More detail about their meaning and usage will be provided in sections \ref{} and \ref{}, depending if they are consumer or producer options.  
+There is not lot of configuration parameters for this component, but few of them are unique, so the list of parameters also provides a basic description for each. Also some parameters are specific only for Consumer or Producer, which will be noted also in the list. This list contains some options for which it could be hard to understand their meaning or purpose, just from the short description. More detail about their meaning and usage will be provided in sections \ref{consumer} and \ref{producer}, depending if they are Consumer or Producer options.  
 
-List of URI parameters for Resteasy endpoint:
+List of URI parameters for the Resteasy endpoint:
 \begin{itemize}
 \item
-servletName -- specifies the servlet name that the endpoint will bind to. This name should match the name of the servlet, that maintains the REST services and it is defined in web.xml. This option is for consumer only and it is required option. 
+servletName -- specifies the servlet name that the endpoint will bind to. This name should match the name of the servlet, that maintains REST services and it is defined in the \texttt{web.xml} file. This option is for the consumer only and it is a required option. 
 
 \item
-resteasyMethod -- use to define, which HTTP method should be used in HTTP client. This option is for producer only. This option can also be specified in CamelResteasyHttpMethod header, which also overrides URI option.
+resteasyMethod -- used to define, which HTTP method should be used in the HTTP client. This option is for the producer only. This option can also be specified in \texttt{CamelResteasyHttpMethod} header, which also overrides  this URI option.
 
 \item
-restEasyHttpBinding
+resteasyHttpBinding --  reference to an \texttt{ResteasyHttpBinding} in the Registry. \texttt{ResteasyHttpBinding} can be used to customize how a producer works with requests and responses.
 
 \item
-proxyClientClass -- options that is used only in producer and it is used for definition of name of the proxy class used in client proxy call.
+proxyClientClass -- option that is used only in the producer and it is used for the definition of the name of the proxy class used in the client proxy call.
 
 \item    
-proxyMethod -- option required if proxyClientClass is specified, therefore only usable on producer endpoint. This option is used for definition of name of the method, that should be inovked in proxyClientClass.
+proxyMethod -- option required if \texttt{proxyClientClass} is specified, therefore only usable in the producer endpoint. This option is used for the definition of the name of the method, that should be invoked in the class specified in \texttt{proxyClientClass} option.
 
 \item
-proxy -- boolean option that can be use on only consumer endpoint. If set to true, then camel with register this consumer as proxy. 
+proxy -- boolean option that can be used only on the consumer endpoint. If set to true, then Camel will register this consumer as a proxy. 
 
 \item 
-camelProxy -- if set to true, then this address is only specified in Camel. Can be used only on consumer endpoint.
+camelProxy -- if set to true, then this address is only specified in a route. Can be used only on the consumer endpoint.
 
 \item
-username -- username for basic authentication on producer endpoint.
+username -- username for the basic authentication on the producer endpoint.
 
 \item
-password -- password for basic authentication on producer endpoint.
+password -- password for the basic authentication on the producer endpoint.
 
 \item
 throwExceptionOnFailure -- ????
 \end{itemize}
 
 
-\section{Resteasy Consumer}
-Consumer part is essential part of this component, because it is really the most useful part of integration between Camel and RESTEasy and it is also in this part where Camel Resteasy is different in some way compared to other components. The most important thing to note is that RESTEasy doesn't provide any other way how to create a RESTEasy server other than create web.xml file in the application. In this file must be specified servlet for RESTEasy, which provides it own servlet class named HttpServletDispatcher. In contrast, other implementation of JAX-RS specification like CXF or Restlet provide way to create their servers programmatically or as a bean in Spring or OSGi.
+\section{Resteasy Consumer}\label{consumer}
+The Consumer part is essential part of this component, because it is really the most useful part of the integration between Apache Camel and RESTEasy. It is also in this part where Camel Resteasy is different in some way compared to other components. The most important thing to note is that RESTEasy doesn't provide any other way how to create a RESTEasy server other than create \texttt{web.xml} file in the application. In this file must be specified servlet for RESTEasy, which provides it own servlet class named \texttt{HttpServletDispatcher}. In contrast, other implementations of JAX-RS specification, like CXF or Restlet provide a way to create their own servers programmatically or as a bean in Spring or OSGi.
 
-Therefore components base on these projects, usually create the server in their Consumer class and handle requests along with their integration with Camel. Something similar cannot be done with RESTEasy and that is why is ResteasyConsumer class is so simple as seen on figure \ref{}. Basically this class just acts as a proxy consumer class so Camel knows there exists a consumer for this component.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.6\linewidth]{images/consumer.png}
+\caption{ResteasyConsumer}
+\label{fig-consumer}
+\end{figure}
+
+Therefore components based on these projects, usually create the server in their Consumer class and handle requests along with their integration with Camel. Something similar cannot be done with RESTEasy and that is why is \texttt{ResteasyConsumer} class is so simple as seen on figure \ref{fig-consumer}. Basically this class just acts as a proxy consumer class so Camel knows that there exists a consumer for this component.
 
 As a reminder, the component defines three types consumers:
 \begin{itemize}
@@ -729,79 +753,109 @@ As a reminder, the component defines three types consumers:
 Basic Consumer  -- fully implemented class with JAX-RS annotations and defined path in the consumer endpoint
 
 \item
-Proxy Consumer -- only interface with JAX-RS annotations, that must be specified in component property \textit{proxyConsumersClasses}. The consumer endpoint with this consumer has to have \textit{proxy} option set to true. 
+Proxy Consumer -- only interface with JAX-RS annotations, that must be specified in component property \texttt{proxyConsumersClasses}. The consumer endpoint with this consumer has to have \texttt{proxy} option set to true. 
 
 \item
-Camel Proxy Consumer -- just specified path on consumer endpoint with base URI provided by the servlet. The consumer endpoint with this consumer has to have \textit{camelProxy} option set to true. 
+Camel Proxy Consumer -- just specified path on consumer endpoint with the base URI provided by the servlet. The consumer endpoint with this consumer has to have \texttt{camelProxy} option set to true. 
 \end{itemize}
 
 
-
-
 \subsection{ResteasyCamelServlet class}\label{servlet}
-ResteasyCamelServlet is the real consumer in Resteasy component. It is extending HttpServletDispatcher class from RESTEasy and acting as a servlet. There are few methods and the most important is service(). This method is responsible for handling request, creating response, sending them both to Camel route and sending the final response back to the client. It also taking into the account all configuration options on URI, so it takes care of all three types of consumers in specific way. 
+\texttt{ResteasyCamelServlet} is the real consumer in the Resteasy component. It is extending \texttt{HttpServletDispatcher} class from RESTEasy and acting as a servlet. There are few methods and the most important is \texttt{service()}. This method is responsible for handling requests, creating responses, sending them both to the Camel route and sending the final response back to the client. It also taking into the account all configuration options on URI, so it takes care of all three types of consumers in a specific way. 
 
-The Basic Consumer takes into the account there is fully implemented web service registered in the servlet runtime. So the request for this consumer is first handled by the servlet extended by the ResteasyCamelServlet and the response is returned. If the request was invalid, then the created response from service is returned. If the request was correct, then response is set as Exchange body and send for processing into the Camel route. When the processing is done then the final response is sent back to the client. 
+The Basic Consumer takes into the account that there is a fully implemented web service registered in the servlet runtime. So the request for this consumer is first handled by the servlet extended by the ResteasyCamelServlet and the response is returned. If the request was invalid, then the created response from the service is returned. If the request was correct, then the response is set as a \texttt{Exchange} body and send for the processing into the Camel route. When the processing is done then the final response is sent back to the client. 
 
-The Proxy Consumer works in similar way. One difference is that if the request was correct then the status code 204 is returned. This code means there was no problem with the request but there is no content for response. That is a correct behaviour, because only annotated interface was provided. In this scenario the request body in set as Exchange body and it is send for processing into the Camel route. The response should be created in the Camel route, so it can be returned back to the client.
+The Proxy Consumer works in similar way. One difference is that if the request was correct then the status code 204 is returned. This code means there was no problem with the request but there is no content for the response. That is a correct behaviour, because only the annotated interface was provided. In this scenario the request body in set as a \texttt{Exchange} body and it is send for the processing into the route. The response should be created in the route, so it can be returned back to the client.
 
 The last type of the consumer is Camel Proxy Consumer. This consumer skips the part of handling the request to extended servlet, otherwise it working exactly the same as the Proxy Consumer.     
 
-Another important method is init(), which is use for creation of ResteasyCamelServlet and registering it HTTP registry. Description of HTTP registry and HttpRegistry class will be provided in section \ref{registry}. This method is also responsible for proxy consumer type. This special consumer was invented as bonus feature for the component, for scenarios where response to the request can be created in Camel route with data from some others systems integrated with Camel. This means that user doesn't need to implement full RESTful service but he just needs to create interface with JAX-RS annotations. This scenario can be very useful to some users, but there is a problem with RESTEasy, which  doesn't register just interfaces with annotations. RESTEasy registers interface with annotations only if there is also a class implementing this interface. This problem is solved in init() method with use of Java Reflection API\footnote{\url{http://docs.oracle.com/javase/tutorial/reflect/index.html}}. If user wants to use this feature, he must specify created interfaces in proxyConsumersClasses property on the ResteasyComponent. The init() method parses these interfaces and using the Reflection API creates dynamic proxy classes\footnote{\url{http://docs.oracle.com/javase/7/docs/technotes/guides/reflection/proxy.html}} for them. These dynamic proxy classes are then registered into the RESTEasy runtime as new resources.
+Another important method is \texttt{init()}, which is used for the creation of \texttt{ResteasyCamelServlet} and registering it in the HTTP registry. The description of the HTTP registry and \texttt{HttpRegistry} class will be provided in section \ref{registry}. This method is also responsible for the proxy consumer type. This special consumer was invented as a bonus feature for the component, for scenarios where the response to the request can be created in the route with data from some others systems integrated with Camel. This means that the user doesn't need to implement a full RESTful service but he just needs to create a interface with JAX-RS annotations. This scenario can be very useful to some users, but there is a problem with RESTEasy, which  doesn't register just interfaces with annotations. RESTEasy registers interface with annotations only if there is also a class implementing this interface. This problem is solved in \texttt{init()} method with use of Java Reflection API\footnote{\url{http://docs.oracle.com/javase/tutorial/reflect/index.html}}. If the user wants to use this feature, he must specify created interfaces in \texttt{proxyConsumersClasses} property on the \texttt{ResteasyComponent}. The \texttt{init()} method parses these interfaces and using the Reflection API creates dynamic proxy classes\footnote{\url{http://docs.oracle.com/javase/7/docs/technotes/guides/reflection/proxy.html}} for them. These dynamic proxy classes are then registered into the RESTEasy runtime as new resources.
 
-There are few more methods in this class, but there are really straightforward. The resolve() method is used for resolving which consumer should handler the request. Methods connect() and disconnect() are use for connecting and disconnecting consumers. 
+There are few more methods in this class, but there are really straightforward. The \texttt{resolve()} method is used for resolving which consumer should handle the request. Methods \texttt{connect()} and \texttt{disconnect()} are used for connecting and disconnecting consumers. 
 
-\subsection*{ResteasyFilter}
-ResteasyFilter is class annotated with @Provider annotation and implementing Filter interface. The annotation takes care of registering the filter to the servlet without need to be specified it in web.xml. This filter doesn't do anything special, its main task is just wrapping requests and responses into custom wrappers created in the component. This must be done because bodies of requests and responses needs to be processed and read more than once in ResteasyCamelServlet to be fully integrated with Camel.
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth]{images/servlet.png}
+\caption{ResteasyServlet}
+\label{comp}
+\end{figure}
 
-For this purpose, two wrappers ResteasyHttpServletRequestWrapper and ResteasyHttpServletResponseWrapper were created. Their main task is to create a copies of bodies of requests and responses, so  ResteasyCamelServlet can manipulate with them much more easily.
+\subsection*{ResteasyFilter class}
+\texttt{ResteasyFilter} is a class annotated with \texttt{@Provider} annotation and implementing \texttt{Filter} interface. The annotation takes care of registering the filter into the servlet without need to be specified in \texttt{web.xml} file. This filter doesn't do anything special. Its main task is just wrapping requests and responses into custom wrappers created in the component. This must be done because bodies of requests and responses need to be processed and read more than once in \texttt{ResteasyCamelServlet} to be fully integrated with Camel.
+
+For this purpose, two wrappers \texttt{ResteasyHttpServletRequestWrapper} and \texttt{ResteasyHttpServletResponseWrapper} were created. Their main task is to create a copies of bodies of requests and responses, so  \texttt{ResteasyCamelServlet} can manipulate them much more easily.
 
 
 \subsection{HttpRegistry class}\label{registry}
-HttpRegistry is sort of helping class for Consumer in this component. It primarily use in ResteasyCamelServlet and ResteasyComponent to connecting and disconnecting consumers. In short, HttpRegistry interface keeps track of running ResteasyServlets and ResteasyConsumers (HttpConsumers) belonging to them.  To be able to that, it provides methods for registering and unregistering servlets and consumers from the registry.
+\texttt{HttpRegistry} is sort of helping class for Consumer in this component. It primarily use in \texttt{ResteasyCamelServlet} and \texttt{ResteasyComponent} to connecting and disconnecting consumers. In short, \texttt{HttpRegistry} interface keeps track of running \texttt{ResteasyServlets} and \texttt{ResteasyConsumers} (HttpConsumers) belonging to them.  To be able to that, it provides methods for registering and unregistering servlets and consumers from the registry.
 
-The Resteasy component also provide default implementation of this interfaces, DefaultHttpRegistry. This default implementation is used as a default in the component. There is also possibility to create own implementation of this interface and set it in ResteasyComponent for usage instead the default one. 
+The Resteasy component also provides a default implementation of this interfaces, \texttt{DefaultHttpRegistry}. This default implementation is used as a default in the component. There is also possibility to create own implementation of this interface and set it in \texttt{ResteasyComponent} for usage instead the default one. 
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.8\linewidth]{images/registry.png}
+\caption{ResteasyComponent}
+\label{comp}
+\end{figure}
 
 
-\section{ResteasyProducer class}
-ResteasyProducer represents client part and is implemented using Client API provided by RESTEasy. It extends DefaultProducer and it is overriding process() method. There are also few methods there primarily used as a helping methods, for creating the right URI, adding query or getting producer configuration options specified URI in endpoint. Main task of producer is getting data from Exchange and send HTTP request to the specified target in endpoint and this is the task of process() method. 
+\section{ResteasyProducer class}\label{producer}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.6\linewidth]{images/producer.png}
+\caption{ResteasyComponent}
+\label{comp}
+\end{figure}
 
-RESTEasy implementation of Client API has one bonus feature compared to JAX-RS Client API. Of course it is providing the same basic HTTP client mentioned in chapter \ref{client-api}. The additional feature is RESTEasy Proxy Framework\footnote{\url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html\#d4e2143}}. It is the mirror opposite of JAX-RS server-side specification, meaning the client framework builds a HTTP request that it uses to invoke on a remote RESTful web service, which also doesn't have to JAX-RS service but can be any web resource accepting HTTP requests. To use this client, user must create Java interface with JAX-RS annotations on methods and then use Client API capable invoking proxy methods on specified interface\cite{resteasy-doc}. More detail about this feature can be found in RESTEasy documentation. 
+\texttt{ResteasyProducer} represents a client part and is implemented using Client API provided by RESTEasy. It extends \texttt{DefaultProducer} and it is overriding the \texttt{process()} method. There are also few methods  primarily used as helping methods, for creating the right URI, adding a query or getting producer configuration options specified in the URI of the endpoint. The main task of the producer is getting data from \texttt{Exchange} and send the HTTP request to the specified target in the endpoint and this is the task of \texttt{process()} method. 
 
-To use this feature in component, user must specify the created interface with fully quantified name in URI option \textit{proxyClientClass} and provide, which method of the interface should be invoked in URI option \textit{proxyMethod}. In reality process() method doesn't have any Client logic implementation in it. Its task is to just select which type of client will be executed depending on provided configuration of endpoint. The real implementation logic of transforming Messages to HTTP requests and HTTP response to Messages is done in implementation of ResteasyHttpBinding interface. In it is also implemented creation of client request and its execution.
+The RESTEasy implementation of Client API has one bonus feature compared to JAX-RS Client API. Of course it is providing the same basic HTTP client mentioned in chapter \ref{client-api}. The additional feature is RESTEasy Proxy Framework\footnote{\url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html\#d4e2143}}. It is the mirror opposite of the JAX-RS server-side specification, meaning the client framework builds a HTTP request that it uses to invoke on a remote RESTful web service, which also doesn't have to be a JAX-RS service but can be any web resource accepting HTTP requests. To use this client, the user must create Java interface with JAX-RS annotations on methods and then use Client API capable invoking proxy methods on the specified interface\cite{resteasy-doc}. More detail about this feature can be found in the RESTEasy documentation. 
+
+To use this feature in the component, the user must specify the created interface with a fully quantified name in the URI option \textit{proxyClientClass} and provide which method of the interface should be invoked in the URI option \textit{proxyMethod}. In reality \texttt{process()} method doesn't have any Client logic implementation in it. Its task is to just select which type of the client will be executed depending on the provided configuration of the endpoint. The real implementation logic of transforming Messages to HTTP requests and HTTP response to Messages is done in the implementation of the \texttt{ResteasyHttpBinding} interface. In it is also implemented the creation of the client request and its execution.
+
+
 
 
 \section{ResteasyHttpBinding class}
-As already mentioned the ResteasyHttpBinding interface and its implementation DefaultResteasyHttpBinding are responsible for conversion of Messages to HTTP requests and HTTP responses to Messages. It is used only in Producer class. 
+As already mentioned the \texttt{ResteasyHttpBinding} interface and its implementation \texttt{DefaultResteasyHttpBinding} are responsible for the conversion of Messages to HTTP requests and HTTP responses to Messages. It is used only in the Producer class. 
 
-These classes contains only 4 methods, where one is just a setter. There is method for populating Exchange from HTTP response and two methods for populating HTTP request from Exchange, depending if the basic client is used or the proxy one. Important aspect of transformation between Exchanges and HTTP requests and responses, is that all headers are extracted and stored between these objects. This is done in both ways of the transformation. Headers are also all filtered by given strategy. The component provides default strategy for filtration named ResteasyHeaderFilterStrategy, but users also can create their own strategy and set on the endpoint as URI option.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\linewidth]{images/binding.png}
+\caption{ResteasyComponent}
+\label{comp}
+\end{figure}
 
-There is also a possibility to create own implementation of ResteasyHttpBinding and set it in the component instead the default one provided by the component. This gives user more flexibility if there is some special task that needs to be done and default implementation can't handle it correctly.  
+
+These classes contain only four methods, where one is just a setter. There is method for populating \texttt{Exchange} from HTTP response and two methods for populating HTTP request from \texttt{Exchange}, depending if the basic client is used or the proxy one. The important aspect of the transformation between Exchanges and HTTP requests and responses, is that all headers are extracted and stored between these objects. This is done in both ways of the transformation. Headers are also all filtered by the given strategy. The component provides a default strategy for the filtration named \texttt{ResteasyHeaderFilterStrategy}, but users also can create their own strategy and set on the endpoint as a URI option.
+
+There is also a possibility to create own implementation of \texttt{ResteasyHttpBinding} and set it in the component instead the default one provided by the component. This gives user more flexibility if there is some special task that needs to be done and the default implementation can't handle it correctly.  
+
 
 \section{Unit tests}
-As already mentioned, RESTEasy can only run in container, where the \textit{.war} application is deployed and servlet is created. This is most crucial for consumer part of the component, so for testing purposes the component was integrated with Arquillian test framework\footnote{\url{http://arquillian.org/}} to use embedded WildFly 8.2 server in tests. Where each test class starts its own WildFly server and deploys created bundle containing the new component and Camel routes.  
+As already mentioned, RESTEasy can only run in the container, where the \textit{.war} application is deployed and the servlet is created. This is most crucial for the consumer part of the component, so for testing purposes the component was integrated with Arquillian test framework\footnote{\url{http://arquillian.org/}} to use embedded WildFly 8.2 server in tests. Where each test class starts its own WildFly server and deploys a created bundle containing the new component and Camel routes.  
 
-Some units test also leverage CamelTestSupport class, that provides lot of useful methods for testing Camel components. This is mostly done in Producer tests in which Arquillian is integrated CamelTestSupport. Tests also provide example different definitions of Camel routes in XML or in Java language.
+Some units test also leverage \texttt{CamelTestSupport} class, that provides lot of useful methods for testing Camel components. This is mostly done in Producer tests in which Arquillian is integrated \texttt{CamelTestSupport}. Tests also provide example of different definitions of routes in XML or in Java language.
 
-Camel has convention for structure of unit tests in which every test class represents scenario and has descriptive self-explaining name. This is done to be much more understandable and clear for outside user. 
+Camel has a convention for the structure of unit tests in which every test class represents a scenario and has a descriptive self-explaining name. This is done to be much more understandable and clear for the outside user. 
 
 %\section{Examples of usage}
 %???
 
 \chapter{Conclusion}
-The main task of this master's thesis was integration of RESTEasy project with Apache Camel project. This means design and developing new Camel component that should be used for integration of RESTful web service and Camel framework. Another requirement set by thesis description was to provide unit tests. Author should also cooperate with community, develop new Camel component by project development standards and investigate RESTEasy implementation. The thesis should also provides comparison of JAX-RS 1.1 and JAX-RS 2.0 specifications.
+The main task of this master's thesis was the integration of RESTEasy project with Apache Camel project. This means designing and developing a new Camel component that should be used for the integration of the RESTful Web Service and the Camel framework. Another requirement set by the thesis description was to provide unit tests. Author should also cooperate with the community, develop new Camel component by project development standards and investigate the RESTEasy implementation. The thesis should also provide comparison of JAX-RS 1.1 and JAX-RS 2.0 specifications.
 
-The result of this master's thesis is Camel Resteasy component. This new component can be used to connect exposed RESTful web service to the Camel Consumer. Furthermore component's Producer can be used as HTTP client that is based on RESTEasy Client API. Thesis also provides comparison between JAX-RS specifications that can be found in chapter \ref{tech}. 
+The result of this master's thesis is Camel Resteasy component. This new component can be used to connect exposed RESTful Web Service to the Camel Consumer. Furthermore component's Producer can be used as HTTP client that is based on RESTEasy Client API. Thesis also provides comparison between JAX-RS specifications that can be found in the chapter \ref{tech}. 
 
-The source code of the component is included in attachments to this thesis. The source code was also hosted on GitHub\footnote{\url{https://github.com/romanjakubco/camel-resteasy}} during development and the latest version can be found there. It is known that computer software is never absolutely perfect, so there is a high chance that new issues and bugs will be found. This is also reason why GitHub was selected for hosting the source code, it provides useful tools for reporting issues or even submitting fixes by pull requests from other developers.  
+The source code of the component is included in attachments to this thesis. The source code was also hosted on GitHub\footnote{\url{https://github.com/romanjakubco/camel-resteasy}} during the development and the latest version can be found there. It is known that the computer software is never absolutely perfect, so there is a high chance that new issues and bugs will be found. This is also reason why GitHub was selected for hosting the source code. It provides useful tools for reporting issues or even submitting fixes by pull requests from other developers.  
 
-As this thesis has also implementation part, it contains the whole source code of Camel Resteasy component. Following Camel project documentation, the skeleton for the component was generated using Maven archetype and the biggest part of the work was integrating RESTEasy into the Camel. Because RESTEasy is different in its approach in creating server for RESTful web services compared to other implementations of JAX-RS specification, not providing other way than creating servlet via web.xml file, the mechanism for connecting the servlet to Consumers and keeping track of all consumers was created. Implementation also leverage already implemented component for HTTP protocol as RESTful web services are based around HTTP. Furthermore, there was need for binding between HTTP messages and messages send in Camel routes on Producer side. The Producer of the component is based on RESTEasy Client API that is providing also additional feature called Proxy Framework described in chapter \ref{impl}. Mechanism for enabling and configuring this feature was developed for Producer part of the component.
+As this thesis also has a implementation part, it contains the whole source code of the Camel Resteasy component. Following  the Camel project documentation, the skeleton for the component was generated using Maven archetype and the biggest part of the work was integrating RESTEasy into the Camel. Because RESTEasy is different in its approach in creating a server for RESTful web services compared to other implementations of JAX-RS specification, not providing other way than creating the servlet via \texttt{web.xml} file, the mechanism for connecting the servlet to Consumers and keeping track of all consumers was created. The implementation also utilizes already implemented component for the HTTP protocol as RESTful Web Services are based around HTTP. Furthermore, there was need for binding between HTTP messages and messages send in routes on Producer side. The Producer of the component is based on RESTEasy Client API that is also providing a additional feature called Proxy Framework described in the chapter \ref{impl}. The mechanism for enabling and configuring this feature was developed for Producer part of the component.
 
-The new component also provides documentation of usage on GitHub and source code is also documented. Great advantage of Camel is its strong and vital community that provides examples and answers to various problems on StackOverflow\footnote{\url{http://stackoverflow.com/}}. The RESTEasy project is also well documented and used by community mostly around JBoss projects that also can provide help with various problems.
+The new component also provides a documentation of usage on GitHub and the source code is also documented. Great advantage of Camel is its strong and vital community that provides examples and answers to various problems on StackOverflow\footnote{\url{http://stackoverflow.com/}}. The RESTEasy project is also well documented and used by community mostly around JBoss projects that also can provide help with various problems.
 
-This component was requested by the community, so there is a effort to submit this component into Apache Camel project but at the moment there is a problem with requirements defined by Camel. One of the requirements for submitting new component into Camel distribution is that all dependencies must be OSGi ready. From various issues found on the web, it seems that RESTEasy has some problems with OSGi environment, mostly in class loading. In different environments like WildFly application server that provides RESTEasy as standard module for creating RESTful web service, the new component works without a problem. This is also demonstrated in unit tests provided with the source code. 
+This component was requested by the community, so there is a effort to submit this component into the Apache Camel project but at the moment there is a problem with requirements defined by Camel. One of the requirements for submitting a new component into the Camel distribution is that all dependencies must be OSGi ready. From various issues found on the web, it seems that RESTEasy has some problems with the OSGi environment, mostly in class loading. In different environments like WildFly application server that provides RESTEasy as standard module for creating RESTful Web Services, the new component works without a problem. This is also demonstrated in unit tests provided with the source code. 
 
-So one of the main goals for the future is to look at RESTEasy in OSGi environment and found a way to make it work correctly. Of course bug fixes should be done as well and as soon as possible. Various improvements and suggestions for new features from community are also welcomed and will be implemented depending on current situation.
+So one of the main goals for the future is to look at RESTEasy in OSGi environment and found a way to make it work correctly. Of course bug fixes should be done as well and as soon as possible. Various improvements and suggestions for new features from community are also welcomed and will be implemented depending on the current situation.
 
 
 

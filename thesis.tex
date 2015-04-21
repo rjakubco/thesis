@@ -25,7 +25,7 @@
 \usepackage[small,bf]{caption}
 \usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
 \usepackage[all]{hypcap}
-\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+%\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 %% Fix long URLs in DVIs
 \usepackage{ifpdf}
@@ -145,7 +145,7 @@ The last chapter is conclusion of the work.
 This chapter describes technologies that are used for implementation of Camel RESTEasy  component. Each subsection introduces the technology and tries to explain what is its main functionality and common usage.
 
 \section{Apache Camel}
-Apache Camel is a open source rule-based routing and mediation framework implemented in Java. It is based on theory of Enterprise Integration Patterns or EIP, described in the book with same name written by Gregor Hohpe and Bobby Wolf\cite{eip}.
+Apache Camel is a open source rule-based routing and mediation framework implemented in Java\cite{java-web}. It is based on theory of Enterprise Integration Patterns or EIP, described in the book with same name written by Gregor Hohpe and Bobby Wolf\cite{eip}.
 
 Its main focus is on integration and interaction between various applications or systems for which Camel can provide standalone routing, transformation, monitoring and many other things. From this point of view Camel may seems like ESB\footnote{ESB - Enterprise Service Bus}, but this is not the case, because Camel doesn't provide a container support or reliable message bus, but it can be deployed into one and create full integration platforms(also know as ESB) like Apache ServiceMix\footnote{\url{http://servicemix.apache.org/}}, JBoss Fuse\footnote{\url{http://www.jboss.org/products/fuse/overview/}} and JBoss Fuse Service Works. 
 
@@ -360,7 +360,7 @@ Main task of endpoints is to be factory for \textit{Consumers} and \textit{Produ
 \subsection*{Consumer and Producer class}
 As already stated, the \textit{Consumer} is starting point though which messages enter the route. Camel of course offers some default implementation for event-driven and polling consumers. This class has no major restrictions how should be implemented, it just needs to implement \texttt{Consumer} interface with its method \texttt{getEndpoint()}. In the component developed in this thesis, \texttt{ResteasyConsumer} connects to running web servlet and it is consuming requests and responses from the RESTEasy web service. 
 
-The \textit{Producer} is responsible for sending messages outside. Similar to \texttt{Consumer} class there are no given restrictions on the implementation, it just needs to implement \texttt{Producer} interface, which extends from the \texttt{Processor} interface that has only one method \texttt{process()}. But it is recommended to extend \texttt{DefaultProducer} class to keep it simple. \texttt{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
+The \textit{Producer} is responsible for sending messages outside. Similar to \texttt{Consumer} class there are no given restrictions on the implementation, it just needs to implement \texttt{Producer} interface, which extends from the \texttt{Processor} interface that has only one method \texttt{process()}. But it is recommended to extend \texttt{DefaultProducer} class to keep it simple\cite{camel-cookbook}. \texttt{ResteasyProducer} acts as HTTP client that sends HTTP requests to specified target.
 
 
 \section{REST}
@@ -551,7 +551,7 @@ Filters are used for a modification or processing of incoming and outgoing reque
 
 In filters, there are two main groups: server-side filters and client-side filters. Both groups have two different filters for the request and  the response. Server-side filters are \texttt{ContainerRequestFilter} that runs before JAX-RS resource method is invoked and \texttt{ContainerResponseFilter} that runs after the invocation of the resource method. A added feature for \texttt{ContainerRequestFilter} is a possibility to specify when the filter should be invoked, before the resource method is matched or after it is matched. This is defined by \texttt{@PreMatching} and \texttt{@PostMatching} annotations. Client-side filters have also two types: \texttt{ClientRequestFilter} and \texttt{ClientResponseFilter} where request filters run before sending the HTTP request to the server and response filters run after receiving response from the server, but before the response body is unmarshalled. \cite{jax-rs-2.0}\cite{resteasy-book}
 
-Interceptors deal with message bodies and are executed in the same call stack as their corresponding reader and writer. Again there are two different types. One type is \texttt{ReaderInterceptor} that wraps around \texttt{MessageBodyReaders} and the second type is \texttt{WriterInterceptor} that wraps around \texttt{MessageBodyWriters}. They are many uses for these interceptors like a implementation of specific encoding, generating digital signatures or posting and preprocessing a Java object before or after it is marshalled.\cite{jax-rs-2.0}
+Interceptors deal with message bodies and are executed in the same call stack as their corresponding reader and writer. Again there are two different types. One type is \texttt{ReaderInterceptor} that wraps around \texttt{MessageBodyReaders} and the second type is \texttt{WriterInterceptor} that wraps around \texttt{MessageBodyWriters}. They are many uses for these interceptors like a implementation of specific encoding, generating digital signatures or posting and preprocessing a Java object before or after it is marshalled.\cite{jax-rs-2.0}\cite{cxf-jax}
 
 
 %\subsection{Features of RESTEasy}\label{resteasy}
@@ -635,16 +635,43 @@ DSL and Spring support
 \end{itemize}
 
 \section{Camel's data flow}
-This section contains two DFDs illustrating data flow incoming into Consumer and outgoing from Producer. 
+This section contains several DFDs illustrating data flow incoming into Consumer and outgoing from Producer. 
 
-As defined in previous section, the new component provides three types of Consumer. Each of them has little bit different data flow, so to better understand them, there are three diagrams. The first diagram shown on the figure \ref{}, shows basic Consumer data (message) flow, where RESTEasy process HTTP request and create response according to implementation of service without sending it to the client. Afterwards, the response is send to Camel route as Exchange for another processing. HTTP request is also bundled into the Exchange in a special header. When the processing  is done, the final Response is returned to the client. 
+As defined in previous section, the new component provides three types of Consumer. Each of them has little bit different data flow, so to better understand them, there are three diagrams. The first diagram shown on the figure \ref{dfd-basic}, shows basic Consumer data (message) flow, where RESTEasy process HTTP request and create response according to implementation of service without sending it to the client. Afterwards, the response is send to Camel route as Exchange for another processing. HTTP request is also bundled into the Exchange in a special header. When the processing  is done, the final Response is returned to the client. 
 
-The second diagram shown on the figure \ref{}, depicts data flow of the second type of consumer. This is a consumer, which is internally called Camel Proxy Consumer in this thesis. This type of Consumer is defined only in the route, that is exposing it as web service. The request should be processed in the route along with creation of response for the client. This consumer is really only bonus feature, that can be used for creation really simple web service without need to create class with JAX-RS annotations. 
+\begin{figure}[h]
+\advance\leftskip-2cm
+\includegraphics[width=1.3\linewidth]{diagrams/basic.png}
+\caption{DFD illustrating Resteasy Consumer}
+\label{dfd-basic}
+\end{figure}
 
-Next diagram shown on figure \ref{}, illustrates the last possible Consumer in the new component, which is internally called Proxy Consumer. In this type of Consumer, users only have to define interface with desired methods annotated with JAX-RS annotations. In this type, RESTEasy will take care of processing and matching HTTP request, which is afterwards send for processing as Exchange into the route and response should be created in the route.  
+The second diagram shown on the figure \ref{dfd-camel}, depicts data flow of the second type of consumer. This is a consumer, which is internally called Camel Proxy Consumer in this thesis. This type of Consumer is defined only in the route, that is exposing it as web service. The request should be processed in the route along with creation of response for the client. This consumer is really only bonus feature, that can be used for creation really simple web service without need to create class with JAX-RS annotations. 
 
+\begin{figure}[h]
+\advance\leftskip-0.5cm
+\includegraphics[width=1.1\linewidth]{diagrams/camelProxy.png}
+\caption{DFD illustrating Resteasy Camel Proxy Consumer}
+\label{dfd-camel}
+\end{figure}
 
-The final diagram shown on figure \ref{}, depicts message flow in a Producer. Producer message flow is reverse to Consumer message flow. It process Exchange from the route and send the HTTP request to the target. 
+Next diagram shown on figure \ref{dfd-proxy}, illustrates the last possible Consumer in the new component, which is internally called Proxy Consumer. In this type of Consumer, users only have to define interface with desired methods annotated with JAX-RS annotations. In this type, RESTEasy will take care of processing and matching HTTP request, which is afterwards send for processing as Exchange into the route and response should be created in the route.  
+
+\begin{figure}[h]
+\advance\leftskip-2cm
+\includegraphics[width=1.3\linewidth]{diagrams/proxy.png}
+\caption{DFD illustrating Resteasy Proxy Consumer}
+\label{dfd-proxy}
+\end{figure}
+
+The final diagram shown on figure \ref{dfd-prod}, depicts message flow in a Producer. Producer message flow is reverse to Consumer message flow. It process Exchange from the route and send the HTTP request to the target. 
+
+\begin{figure}[h]
+\advance\leftskip-1cm
+\includegraphics[width=1.1\linewidth]{diagrams/producer.png}
+\caption{DFD illustrating Resteasy Producer}
+\label{dfd-prod}
+\end{figure}
 
 
 \chapter{Implementation}\label{impl}
@@ -743,7 +770,7 @@ ResteasyCamelServlet is the real consumer in Resteasy component. It is extending
 
 The Basic Consumer takes into the account there is fully implemented web service registered in the servlet runtime. So the request for this consumer is first handled by the servlet extended by the ResteasyCamelServlet and the response is returned. If the request was invalid, then the created response from service is returned. If the request was correct, then response is set as Exchange body and send for processing into the Camel route. When the processing is done then the final response is sent back to the client. 
 
-The Proxy Consumer works in similar way. One difference is that if the request was correct then the status code 204 is returned. This code means there was no problem with the request but there is no content for response. That is a correct behaviour, because only annotated interface was provided. In this scenario the request body in set as Exchange body and it is send for processing into the Camel route. The response should be created in the Camel route, so it can be returned back to the client.
+The Proxy Consumer works in similar way. One difference is that if the request was correct then the status code 204 is returned. This code means there was no problem with the request but there is no content for response\cite{http}. That is a correct behaviour, because only annotated interface was provided. In this scenario the request body in set as Exchange body and it is send for processing into the Camel route. The response should be created in the Camel route, so it can be returned back to the client.
 
 The last type of the consumer is Camel Proxy Consumer. This consumer skips the part of handling the request to extended servlet, otherwise it working exactly the same as the Proxy Consumer.     
 
@@ -840,9 +867,9 @@ So one of the main goals for the future is to look at RESTEasy in OSGi environme
 
 \bibitem{rest-arch} FIELDING, Roy Thomas. \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine, 2000. 
 
-\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cite 2014-12-12]. Available at: \url{http://camel.apache.org/}
+\bibitem{camel-web} APACHE. \textit{Apache Camel} [online]. 2004- [cited 2014-12-4]. Available at: \url{http://camel.apache.org/}
 
-\bibitem{camel-dzone} http://java.dzone.com/articles/open-source-integration-apache
+\bibitem{camel-dzone} ANSTEY, Jonathan. \textit{Open Source Integration with Apache Camel and How Fuse IDE Can Help} [online]. 2011- [cited 2015-04-6] \url{http://java.dzone.com/articles/open-source-integration-apache}
 
 \bibitem{camel-exchange} http://camel.apache.org/exchange-pattern.html
 
@@ -851,22 +878,28 @@ So one of the main goals for the future is to look at RESTEasy in OSGi environme
 
 
 
-\bibitem{jax-1.1} http://www.javaworld.com/article/2073264/jax-rs-1-1--what-s-new-.html
-\bibitem{jax-1.1-2} http://www.infoq.com/news/2010/02/javaee6-rest
-
-\bibitem{resteasy-doc}\url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html}
-
-\bibitem{jax-wiki} \url{http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services}
+\bibitem{jax-1.1} JavaWorld. \textit{JAX-RS 1.1: What's New?} [online]. 2010- [cited 2015-04-10]. Available at: \url{http://www.javaworld.com/article/2073264/jax-rs-1-1--what-s-new-.html}
 
 
+\bibitem{jax-1.1-2}  PENCHIKALA, Srini. \textit{
+Java EE 6 Web Services: JAX-RS 1.1 Provides Annotation Based REST Support} [online]. 2010- [cited 2015-04-10]. Available at: \url{http://www.infoq.com/news/2010/02/javaee6-rest}
 
-\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cite 2014-12-12]. Available at: \url{http://www.java.com/}		
+\bibitem{resteasy-doc} JBoss Community. \textit{RESTEasy JAX-RS 3.0.9.Final} [online]. [cited 2015-04-12]. Available at: \url{http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html_single/index.html}
 
-\bibitem{jax-rs-2.0-new} http://www.infoq.com/news/2013/06/Whats-New-in-JAX-RS-2.0
+\bibitem{jax-wiki} 
+Wikipedia contributors. \textit{Java API for RESTful Web Services}. Wikipedia, The Free Encyclopedia. [online] 2015- [cited 2015-04-10]. Available from: \url{http://en.wikipedia.org/w/index.php?title=Java_API_for_RESTful_Web_Services&oldid=651765585} 
 
-\bibitem{jax-rs-2.0} http://java.dzone.com/articles/whats-new-jax-rs-20 	
 
-\bibitem{cxf-jax} http://cxf.apache.org/docs/jax-rs-basics.html\#JAX-RSBasics-WhatisNewinJAX-RS2.0
+\bibitem{java-web} ORACLE. \textit{Java} [online]. \copyright{} 2004- [cited 2015-12-12]. Available at: \url{http://www.java.com/}		
+
+\bibitem{jax-rs-2.0-new} GRAZI, Victor. \textit{What's New in JAX-RS 2.0?} [online]. 2013- [cited 2015-04-11]. Available at: \url{http://www.infoq.com/news/2013/06/Whats-New-in-JAX-RS-2.0}
+
+\bibitem{jax-rs-2.0} BURKE, Bill, \textit{What's New in JAX-RS 2.0} [online]. 2012- [cited 2015-04-11]. Available at: \url{http://java.dzone.com/articles/whats-new-jax-rs-20} 	
+
+\bibitem{cxf-jax} APACHE. \textit{JAX-RS : Understanding the Basics} [online]. 2010- [cited 2015-04-11] \url{http://cxf.apache.org/docs/jax-rs-basics.html\#JAX-RSBasics-WhatisNewinJAX-RS2.0}
+
+\bibitem{http} NETWORK WORKING GROUP. \textit{Hypertext Transfer Protocol -- HTTP/1.1
+} [online]. 1999- [cited 2015-04-4]. Available at : \url{https://www.ietf.org/rfc/rfc2616}
 
 %
 

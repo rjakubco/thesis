@@ -1,6 +1,6 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYGtrac{n+nt}{\PYGtracZlt{}route\PYGtracZgt{}}
-   \PYGtrac{n+nt}{\PYGtracZlt{}from} \PYGtrac{n+na}{uri=}\PYGtrac{l+s}{\PYGtracZsq{}resteasy:/say/hello?servletName=restServlet\PYGtracZsq{}}\PYGtrac{n+nt}{/\PYGtracZgt{}}
+   \PYGtrac{n+nt}{\PYGtracZlt{}from} \PYGtrac{n+na}{uri=}\PYGtrac{l+s}{\PYGtracZsq{}resteasy:/say/hello?servletName=servlet\PYGtracZsq{}}\PYGtrac{n+nt}{/\PYGtracZgt{}}
    \PYGtrac{n+nt}{\PYGtracZlt{}to} \PYGtrac{n+na}{uri=}\PYGtrac{l+s}{\PYGtracZsq{}file:log/response.log\PYGtracZsq{}}\PYGtrac{n+nt}{/\PYGtracZgt{}}
 \PYGtrac{n+nt}{\PYGtracZlt{}/route\PYGtracZgt{}}
 \end{Verbatim}

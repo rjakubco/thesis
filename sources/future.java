@@ -1,5 +1,6 @@
-Future<Customer>future = client.target("http://e.com/customers")
-.queryParam("name", "Bill Burke").request().async()
+Future<Customer>future = 
+		client.target("http://test.com/customers")
+.queryParam("name", "Roman Jakubco").request().async()
 .get(Customer.class); 
 
 try {

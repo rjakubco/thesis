@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n+nd}{@Path}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}/orders\PYGtracZdq{}}\PYGtrac{o}{)}
+\PYGtrac{k+kd}{public} \PYGtrac{k+kd}{class} \PYGtrac{n+nc}{Order}\PYGtrac{o}{\PYGtracZob{}}
+	
+  \PYGtrac{n+nd}{@Post}
+  \PYGtrac{n+nd}{@Consumes}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}application/json\PYGtracZdq{}}\PYGtrac{o}{)}
+  \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{submit}\PYGtrac{o}{(}\PYGtrac{n}{Order} \PYGtrac{n}{order}\PYGtrac{o}{,} 
+                     \PYGtrac{n+nd}{@Suspended} \PYGtrac{n}{AsyncResponse} \PYGtrac{n}{response}\PYGtrac{o}{)\PYGtracZob{}}
+    \PYGtrac{k}{new} \PYGtrac{n+nf}{Thread}\PYGtrac{o}{()} \PYGtrac{o}{\PYGtracZob{}}
+      \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{run}\PYGtrac{o}{()} \PYGtrac{o}{\PYGtracZob{}}
+	 \PYGtrac{n}{OrderConfirmation} \PYGtrac{n}{con} \PYGtrac{o}{=} \PYGtrac{n}{orderProcess}\PYGtrac{o}{.}\PYGtrac{n+na}{process}\PYGtrac{o}{(}\PYGtrac{n}{order}\PYGtrac{o}{);}
+	 \PYGtrac{n}{Response} \PYGtrac{n}{resp} \PYGtrac{o}{=} \PYGtrac{n}{Response}\PYGtrac{o}{.}\PYGtrac{n+na}{ok}\PYGtrac{o}{(}\PYGtrac{n}{con}\PYGtrac{o}{,}
+	   	          \PYGtrac{n}{MediaType}\PYGtrac{o}{.}\PYGtrac{n+na}{APPLICATION\PYGtracZus{}XML\PYGtracZus{}TYPE}\PYGtrac{o}{)}
+			 \PYGtrac{o}{.}\PYGtrac{n+na}{build}\PYGtrac{o}{();}
+	 \PYGtrac{n}{response}\PYGtrac{o}{.}\PYGtrac{n+na}{resume}\PYGtrac{o}{(}\PYGtrac{n}{resp}\PYGtrac{o}{);}
+      \PYGtrac{o}{\PYGtracZcb{}}
+    \PYGtrac{o}{\PYGtracZcb{}.}\PYGtrac{n+na}{start}\PYGtrac{o}{();}
+  \PYGtrac{o}{\PYGtracZcb{}}
+\PYGtrac{o}{\PYGtracZcb{}}
+\end{Verbatim}

@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGtrac{n}{from} \PYGtrac{l+s}{\PYGtracZdq{}resteasy:/say/hello?servletName=restServlet\PYGtracZdq{}} 
-	\PYGtrac{o}{\PYGtracZhy{}\PYGtracZgt{}} \PYGtrac{l+s}{\PYGtracZdq{}file:log/response.log\PYGtracZdq{}}
-\end{Verbatim}

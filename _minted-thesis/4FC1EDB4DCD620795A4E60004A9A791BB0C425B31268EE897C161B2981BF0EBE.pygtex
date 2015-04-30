@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGtrac{n}{InvocationCallback}\PYGtrac{o}{\PYGtracZlt{}}\PYGtrac{n}{Response}\PYGtrac{o}{\PYGtracZgt{}} \PYGtrac{n}{callback} \PYGtrac{o}{=} 
+   \PYGtrac{k}{new} \PYGtrac{n}{InvocationCallback} \PYGtrac{o}{\PYGtracZob{}}
+        \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{completed}\PYGtrac{o}{(}\PYGtrac{n}{Response} \PYGtrac{n}{res}\PYGtrac{o}{)} \PYGtrac{o}{\PYGtracZob{}}
+          \PYGtrac{n}{System}\PYGtrac{o}{.}\PYGtrac{n+na}{out}\PYGtrac{o}{.}\PYGtrac{n+na}{println}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}Request success!\PYGtracZdq{}}\PYGtrac{o}{);}
+        \PYGtrac{o}{\PYGtracZcb{}} 
+
+        \PYGtrac{k+kd}{public} \PYGtrac{k+kt}{void} \PYGtrac{n+nf}{failed}\PYGtrac{o}{(}\PYGtrac{n}{ClientException} \PYGtrac{n}{e}\PYGtrac{o}{)} \PYGtrac{o}{\PYGtracZob{}}
+          \PYGtrac{n}{System}\PYGtrac{o}{.}\PYGtrac{n+na}{out}\PYGtrac{o}{.}\PYGtrac{n+na}{println}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}Request failed!\PYGtracZdq{}}\PYGtrac{o}{);}
+        \PYGtrac{o}{\PYGtracZcb{}}
+\PYGtrac{o}{\PYGtracZcb{};} 
+
+\PYGtrac{n}{client}\PYGtrac{o}{.}\PYGtrac{n+na}{target}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}http://example.com/customers\PYGtracZdq{}}\PYGtrac{o}{).}
+\PYGtrac{n}{queryParam}\PYGtrac{o}{(}\PYGtrac{l+s}{\PYGtracZdq{}name\PYGtracZdq{}}\PYGtrac{o}{,} \PYGtrac{l+s}{\PYGtracZdq{}Roman Jakubco\PYGtracZdq{}}\PYGtrac{o}{).}\PYGtrac{n+na}{request}\PYGtrac{o}{().}
+\PYGtrac{n}{async}\PYGtrac{o}{().}\PYGtrac{n+na}{get}\PYGtrac{o}{(}\PYGtrac{n}{callback}\PYGtrac{o}{);}
+\end{Verbatim}

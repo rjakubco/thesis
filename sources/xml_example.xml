@@ -1,4 +1,4 @@
 <route>
-   <from uri='resteasy:/say/hello?servletName=restServlet'/>
+   <from uri='resteasy:/say/hello?servletName=servlet'/>
    <to uri='file:log/response.log'/>
 </route>

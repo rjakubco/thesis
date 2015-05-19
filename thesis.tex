@@ -668,7 +668,7 @@ RESTEasy 3.10.0
 \end{itemize}
 
 \section{Class diagram}
-The final fully exported class diagram for the \textit{Camel Resteasy} component can be found in the appendix \ref{class-dia}. Sections describing single classes of the component will use only single class diagrams.
+The final fully exported class diagram for the \textit{Camel Resteasy} component can be found in the appendix on page \pageref{class-bla}. Sections describing single classes of the component will use only single class diagrams.
 
 \section{ResteasyComponent class}
 The \texttt{ResteasyComponent} class is the base of the whole implemented component and it is where everything starts. It extends \texttt{HttpComponent} to leverage already implemented code needed to run in the Camel, after all Resteasy component is similar to \texttt{HttpComponent} because it consumes HTTP requests. As it was already mentioned, the main purpose of \texttt{Component} class is to be a factory of endpoints. Therefore, \texttt{createEndpoint()} method must be implemented and it must override the same method from the \texttt{HttpComponent} class.
@@ -750,13 +750,13 @@ Therefore, components based on these projects, usually create the server in thei
 As a reminder, the component defines three types \textit{consumers}:
 \begin{itemize}
 \item
-Basic Consumer  -- fully implemented class with JAX-RS annotations and defined path in the \textit{consumer} endpoint
+\textit{Basic Consumer} -- fully implemented class with JAX-RS annotations and defined path in the \textit{consumer} endpoint
 
 \item
-Proxy Consumer -- only interface with JAX-RS annotations that must be specified in component property \textit{proxyConsumersClass\-es}. The \textit{consumer} endpoint with this \textit{consumer} has to have \texttt{proxy} option set to true. 
+\textit{Proxy Consumer} -- only interface with JAX-RS annotations that must be specified in component property \textit{proxyConsumersClass\-es}. The \textit{consumer} endpoint with this \textit{consumer} has to have \texttt{proxy} option set to true. 
 
 \item
-Camel Proxy Consumer -- just specified path on \textit{consumer} endpoint with the base URI provided by the servlet. The \textit{consumer} endpoint with this \textit{consumer} has to have \textit{camelProxy} option set to true. 
+\textit{Camel Proxy Consumer} -- just specified path on \textit{consumer} endpoint with the base URI provided by the servlet. The \textit{consumer} endpoint with this \textit{consumer} has to have \textit{camelProxy} option set to true. 
 \end{itemize}
 
 
@@ -767,6 +767,12 @@ The \textit{Basic Consumer} takes into account that there exists a fully impleme
 
 The \textit{Proxy Consumer} works in similar way. One difference is that if the request was correct then the status code 204 is returned. This code means there was no problem with the request but there is no content for the response\cite{http}. That is a correct behaviour because only the annotated interface was provided. In this scenario the request body in set as a \textit{exchange} body and it is sent for the processing into the route. The response should be created in the route, so it can be returned back to the client.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{images/servlet.png}
+\caption{ResteasyCamelServlet class}
+\label{comp}
+\end{figure}
 
 The last type of the consumer is \textit{Camel Proxy Consumer}. This consumer skips the part of handling the request to the extended servlet, otherwise it is working exactly in the same way as the \textit{Proxy Consumer}.     
 
@@ -774,17 +780,14 @@ Another important method is \texttt{init()}, which is used for the creation of \
 
 There are few more methods in this class but there are really straightforward. The \texttt{resolve()} method is used for resolving which \textit{consumer} should handle the request. Methods \texttt{connect()} and \texttt{disconnect()} are used for connecting and disconnecting \textit{consumers}. 
 
-\begin{figure}
-\centering
-\includegraphics[width=0.8\linewidth]{images/servlet.png}
-\caption{ResteasyCamelServlet class}
-\label{comp}
-\end{figure}
 
 \subsection*{ResteasyFilter class}
 \texttt{ResteasyFilter} is a class annotated with \texttt{@Provider} annotation and implementing \texttt{Filter} interface. The annotation takes care of registering the filter into the servlet without need to be specified in the \texttt{web.xml} file. This filter doesn't do anything special. Its main task is just wrapping requests and responses into custom wrappers created in the component. This must be done because bodies of requests and responses need to be processed and read more than once in \texttt{ResteasyCamelServlet} to be fully integrated with Camel.
 
 For this purpose, two wrappers \texttt{ResteasyHttpServletRequestWrap\-per} and \texttt{ResteasyHttpServletResponseWrapper} were created. Their main task is to create a copies of bodies of requests and responses, so  \texttt{ResteasyCamelServlet} can manipulate them much more easily.
+
+
+
 
 
 \subsection{HttpRegistry class}\label{registry}
@@ -966,7 +969,7 @@ Wikipedia contributors. \textit{Java API for RESTful Web Services}. Wikipedia, T
 \end{listing}
 
 
-\begin{listing}[ht]
+\begin{listing}[H]
 	\inputminted[]{java}{sources/asyncServer.java}
 	\caption{Asynchronous server-side}
 	\label{async-server}
@@ -975,42 +978,44 @@ Wikipedia contributors. \textit{Java API for RESTful Web Services}. Wikipedia, T
 
 \newpage
 \clearpage
-\section{Data flow diagrams}
+
+\section{Diagrams}
 \begin{figure}[H]
-\advance\leftskip-2cm
-\includegraphics[width=1.3\linewidth]{diagrams/basic.png}
+%\advance\leftskip-2cm
+\includegraphics[width=1.1\linewidth]{diagrams/basic.png}
 \caption{DFD illustrating Resteasy Consumer}
 \label{dfd-basic}
 \end{figure}
 
 
 \begin{figure}[H]
-\advance\leftskip-0.5cm
-\includegraphics[width=1.1\linewidth]{diagrams/camelProxy.png}
+%\advance\leftskip-0.5cm
+\includegraphics[width=1.0\linewidth]{diagrams/camelProxy.png}
 \caption{DFD illustrating Resteasy Camel Proxy Consumer}
 \label{dfd-camel}
 \end{figure}
- 
 
-\begin{figure}[h!]
-\advance\leftskip-2cm
-\includegraphics[width=1.3\linewidth]{diagrams/proxy.png}
+
+\begin{figure}[H]
+%\advance\leftskip-2cm
+\includegraphics[width=1.1\linewidth]{diagrams/proxy.png}
 \caption{DFD illustrating Resteasy Proxy Consumer}
 \label{dfd-proxy}
 \end{figure}
 
-
-\begin{figure}[h]
-\advance\leftskip-1cm
-\includegraphics[width=1.1\linewidth]{diagrams/producer.png}
+\begin{figure}[H]
+%\advance\leftskip-1cm
+\includegraphics[width=1.0\linewidth]{diagrams/producer.png}
 \caption{DFD illustrating Resteasy Producer}
 \label{dfd-prod}
 \end{figure}
 
-\section{Class Diagram}\label{class-dia}
-\begin{figure}[H]
+%\section{Class Diagram}
+\begin{figure}[H]\
 \centering
-\includegraphics[width=0.78\linewidth]{diagrams/class2.png}
+
+\label{class-bla}
+\includegraphics[width=1.0\linewidth , height=1.05\textheight]{diagrams/class2.png}
 
 \end{figure}
 %% End of the whole document
